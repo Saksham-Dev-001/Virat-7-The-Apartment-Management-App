@@ -1,0 +1,53 @@
+/* ================= HEADER ================= */
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+/* ---------- Back Button ---------- */
+.back-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: #eef2ff; /* slightly darker */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.back-btn i {
+  font-size: 18px;
+  color: #4c51bf; /* DARKER blue for visibility */
+}
+
+/* Page title */
+.page-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #222;
+  margin: 0;
+}
+
+/* Right spacer */
+.header-spacer {
+  width: 40px;
+}
+
+/* FORCE back icon visibility on Bills page */
+.back-btn i {
+  color: #4c51bf !important;
+}
+
+.back-btn {
+  background: #eef2ff !important;
+}

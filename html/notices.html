@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>Notice Board | VIRAT-7</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/header.css">
+
+<style>
+
+body{
+background:#f4f6fb;
+font-family:Poppins,sans-serif;
+}
+
+/* WRAPPER */
+
+.notice-wrapper{
+padding:18px;
+max-width:700px;
+margin:auto;
+}
+
+/* NOTICE COUNT */
+
+.notice-count{
+font-size:13px;
+color:#777;
+margin-bottom:12px;
+}
+
+/* CARD */
+
+.notice-card{
+
+background:#fff;
+border-radius:16px;
+
+padding:18px;
+
+margin-bottom:16px;
+
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+animation:fadeUp .35s ease;
+
+transition:all .25s ease;
+
+border-left:4px solid transparent;
+
+}
+
+.notice-card:hover{
+
+transform:translateY(-4px);
+
+box-shadow:0 14px 28px rgba(0,0,0,.12);
+
+}
+
+/* PINNED */
+
+.notice-card.pinned{
+border-left:4px solid #5a67d8;
+background:#f8f9ff;
+}
+
+/* HEADER */
+
+.notice-header{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+margin-bottom:6px;
+
+}
+
+.notice-title{
+
+font-weight:600;
+font-size:16px;
+
+display:flex;
+align-items:center;
+gap:8px;
+
+}
+
+.notice-title i{
+color:#5a67d8;
+}
+
+/* DATE */
+
+.notice-date{
+
+font-size:12px;
+color:#888;
+
+}
+
+/* MESSAGE */
+
+.notice-desc{
+
+font-size:14px;
+color:#555;
+
+margin-top:6px;
+line-height:1.5;
+
+}
+
+/* EMPTY */
+
+.empty{
+
+text-align:center;
+padding:60px 20px;
+color:#777;
+
+}
+
+.empty i{
+font-size:42px;
+margin-bottom:10px;
+color:#ccc;
+}
+
+/* ANIMATION */
+
+@keyframes fadeUp{
+
+from{
+opacity:0;
+transform:translateY(12px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+/* SCROLL */
+
+#noticeList{
+max-height:calc(100vh - 120px);
+overflow:auto;
+padding-right:4px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<header class="app-header">
+
+<button class="back-btn" onclick="history.back()">
+<i class="fa-solid fa-arrow-left"></i>
+</button>
+
+<h3 class="page-title">Notice Board</h3>
+
+<div style="width:40px"></div>
+
+</header>
+
+
+<main class="notice-wrapper">
+
+<div class="notice-count" id="noticeCount"></div>
+
+<div id="noticeList"></div>
+
+</main>
+
+
+<script type="module">
+
+import { db } from "../js/firebase.js";
+
+import {
+collection,
+query,
+orderBy,
+onSnapshot
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const container = document.getElementById("noticeList");
+const count = document.getElementById("noticeCount");
+
+
+const q = query(
+collection(db,"notices"),
+orderBy("createdAt","desc")
+);
+
+
+onSnapshot(q,(snapshot)=>{
+
+container.innerHTML="";
+
+if(count){
+count.innerText = snapshot.size + " Notices";
+}
+
+
+if(snapshot.empty){
+
+container.innerHTML=`
+
+<div class="empty">
+<i class="fa-solid fa-bullhorn"></i>
+<p>No notices yet</p>
+</div>
+
+`;
+
+return;
+
+}
+
+
+/* PINNED SORT */
+
+let pinned=[];
+let normal=[];
+
+
+snapshot.forEach(doc=>{
+
+const data=doc.data();
+
+let date="";
+
+if(data.createdAt){
+
+const d=data.createdAt.toDate();
+
+date=d.toLocaleDateString()+" • "+
+d.toLocaleTimeString([],{
+hour:"2-digit",
+minute:"2-digit"
+});
+
+}
+
+
+const card = `
+
+<div class="notice-card ${data.pinned ? "pinned" : ""}">
+
+<div class="notice-header">
+
+<div class="notice-title">
+<i class="fa-solid fa-bullhorn"></i>
+${data.title}
+</div>
+
+<div class="notice-date">
+${date}
+</div>
+
+</div>
+
+<div class="notice-desc">
+${data.message}
+</div>
+
+</div>
+
+`;
+
+if(data.pinned){
+pinned.push(card);
+}else{
+normal.push(card);
+}
+
+});
+
+
+container.innerHTML = pinned.join("") + normal.join("");
+
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Maintenance | Admin</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link rel="stylesheet" href="../css/admin-maintenance.css">
+
+<style>
+
+body{
+font-family:system-ui;
+margin:0;
+background:#f4f6fb;
+}
+
+/* HEADER */
+
+.header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:14px 16px;
+background:#fff;
+box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+
+.header h2{
+margin:0;
+font-size:18px;
+}
+
+.back{
+font-size:18px;
+cursor:pointer;
+background:#f2f4f8;
+width:36px;
+height:36px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+/* GRID */
+
+.container{
+padding:16px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+}
+
+.card{
+background:#fff;
+padding:18px;
+border-radius:16px;
+box-shadow:0 10px 20px rgba(0,0,0,0.08);
+}
+
+.card h3{
+margin-top:0;
+}
+
+/* FORM */
+
+select,input{
+width:100%;
+padding:10px;
+margin-bottom:10px;
+border-radius:10px;
+border:1px solid #ddd;
+font-size:14px;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:12px;
+background:linear-gradient(135deg,#5a67d8,#4c51bf);
+color:#fff;
+font-size:14px;
+cursor:pointer;
+}
+
+/* SUMMARY */
+
+.summary{
+font-size:15px;
+line-height:1.8;
+}
+
+/* RECENT */
+
+.recent{
+grid-column:1/3;
+}
+
+.recent-due{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px 0;
+border-bottom:1px solid #eee;
+}
+
+.edit-btn{
+background:#5a67d8;
+margin-right:6px;
+}
+
+.delete-btn{
+background:#e53e3e;
+}
+
+.edit-btn,.delete-btn{
+border:none;
+padding:6px 10px;
+border-radius:6px;
+color:#fff;
+font-size:12px;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<div class="header">
+
+<div class="back" id="backBtn">
+<i class="fa-solid fa-arrow-left"></i>
+</div>
+
+<h2>Maintenance</h2>
+
+<div style="width:36px"></div>
+
+</div>
+
+<!-- CONTENT -->
+
+<div class="container">
+
+<!-- CREATE DUE -->
+
+<div class="card">
+
+<h3>Create New Due</h3>
+
+<select id="flat">
+<option value="">Select Flat</option>
+</select>
+
+<input id="amount" placeholder="Amount (₹)" type="number">
+
+<select id="type">
+<option>Maintenance</option>
+<option>Water</option>
+<option>Electricity</option>
+</select>
+
+<select id="month"></select>
+
+<button onclick="createDue()">Create Due</button>
+
+</div>
+
+
+<!-- SUMMARY -->
+
+<div class="card">
+
+<h3>Total Dues Summary</h3>
+
+<div class="summary">
+
+Total Bills: <b id="totalBills">0</b><br>
+
+Total Amount: <b id="totalAmount">₹0</b><br>
+
+Paid: <b id="paidAmount">₹0</b><br>
+
+Pending: <b id="pendingAmount">₹0</b>
+
+</div>
+
+</div>
+
+
+<!-- RECENT DUES -->
+
+<div class="card recent">
+
+<h3>Recent Dues</h3>
+
+<div id="recentDues">
+<p>No dues created yet</p>
+</div>
+
+</div>
+
+</div>
+
+
+<script type="module">
+
+import { db } from "../js/firebase.js";
+import "../js/admin.js";
+
+import {
+collection,
+query,
+orderBy,
+onSnapshot,
+doc,
+deleteDoc,
+updateDoc,
+getDocs
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+/* ===============================
+BACK BUTTON
+=============================== */
+
+document.getElementById("backBtn").onclick = () => {
+
+if(history.length > 1){
+history.back();
+}else{
+window.location.href="../dashboard.html";
+}
+
+};
+
+
+/* ===============================
+MONTH DROPDOWN
+=============================== */
+
+const monthSelect=document.getElementById("month");
+
+const months=[
+"January","February","March","April","May","June",
+"July","August","September","October","November","December"
+];
+
+const now=new Date();
+
+for(let i=0;i<24;i++){
+
+const m=(now.getMonth()+i)%12;
+const y=now.getFullYear()+Math.floor((now.getMonth()+i)/12);
+
+const option=document.createElement("option");
+
+option.value=`${months[m]} ${y}`;
+option.textContent=`${months[m]} ${y}`;
+
+monthSelect.appendChild(option);
+
+}
+
+
+/* ===============================
+LOAD FLATS (REMOVE DUPLICATES)
+=============================== */
+
+const flatSelect=document.getElementById("flat");
+
+async function loadFlats(){
+
+const snap=await getDocs(collection(db,"users"));
+
+const flats=new Set();
+
+snap.forEach(docSnap=>{
+
+const u=docSnap.data();
+
+if(u.flat && !flats.has(u.flat)){
+
+flats.add(u.flat);
+
+const option=document.createElement("option");
+
+option.value=u.flat;
+option.textContent=u.flat;
+
+flatSelect.appendChild(option);
+
+}
+
+});
+
+}
+
+loadFlats();
+
+
+/* ===============================
+LOAD RECENT DUES + ANALYTICS
+=============================== */
+
+const container=document.getElementById("recentDues");
+
+const q=query(
+collection(db,"dues"),
+orderBy("createdAt","desc")
+);
+
+onSnapshot(q,(snap)=>{
+
+container.innerHTML="";
+
+let totalAmount=0;
+let paidAmount=0;
+let pendingAmount=0;
+let bills=0;
+
+if(snap.empty){
+
+container.innerHTML="<p>No dues created yet</p>";
+
+document.getElementById("totalBills").innerText=0;
+document.getElementById("totalAmount").innerText="₹0";
+document.getElementById("paidAmount").innerText="₹0";
+document.getElementById("pendingAmount").innerText="₹0";
+
+return;
+
+}
+
+snap.forEach(docSnap=>{
+
+const d=docSnap.data();
+
+const amount=Number(d.amount);
+
+bills++;
+totalAmount+=amount;
+
+if(d.status==="paid"){
+paidAmount+=amount;
+}else{
+pendingAmount+=amount;
+}
+
+container.innerHTML+=`
+
+<div class="recent-due">
+
+<div>
+
+<b>Flat ${d.flat}</b><br>
+${d.type} • ${d.month}<br>
+₹${d.amount}
+
+</div>
+
+<div>
+
+<button class="edit-btn"
+onclick="editDue('${docSnap.id}','${d.amount}')">
+Edit
+</button>
+
+<button class="delete-btn"
+onclick="deleteDue('${docSnap.id}')">
+Delete
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+
+/* UPDATE SUMMARY */
+
+document.getElementById("totalBills").innerText=bills;
+document.getElementById("totalAmount").innerText="₹"+totalAmount;
+document.getElementById("paidAmount").innerText="₹"+paidAmount;
+document.getElementById("pendingAmount").innerText="₹"+pendingAmount;
+
+});
+
+
+/* ===============================
+DELETE DUE
+=============================== */
+
+window.deleteDue=async function(id){
+
+if(!confirm("Delete this due?")) return;
+
+await deleteDoc(doc(db,"dues",id));
+
+};
+
+
+/* ===============================
+EDIT DUE
+=============================== */
+
+window.editDue=async function(id,currentAmount){
+
+const newAmount=prompt("Edit amount",currentAmount);
+
+if(!newAmount) return;
+
+await updateDoc(doc(db,"dues",id),{
+amount:newAmount
+});
+
+};
+
+</script>
+
+</body>
+</html>

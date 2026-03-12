@@ -1,0 +1,121 @@
+.logout-btn {
+  width: 100%;
+  margin-top: auto;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: #c62828;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.logout-btn:active {
+  background: #b71c1c;
+}
+
+
+.app-logo {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #000;
+  display: flex;
+  align-items: center;
+}
+
+.app-logo span {
+  color: #3f51f5; /* blue 7 */
+  margin-left: 4px;
+}
+
+.app-logo {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  position: relative;
+  color: #111;
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.app-logo span {
+  color: #3f51f5;
+  margin-left: 4px;
+  text-shadow: 0 0 8px rgba(63, 81, 245, 0.6);
+}
+
+/* ✨ Shine animation */
+.app-logo::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 120%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 100%
+  );
+  animation: shineMove 3.5s infinite;
+}
+
+@keyframes shineMove {
+  0% {
+    left: -150%;
+  }
+  50% {
+    left: 150%;
+  }
+  100% {
+    left: 150%;
+  }
+}
+
+/* 💡 Soft glow pulse */
+.shine {
+  animation: glowPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0% {
+    text-shadow: 0 0 6px rgba(63, 81, 245, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 12px rgba(63, 81, 245, 0.7);
+  }
+  100% {
+    text-shadow: 0 0 6px rgba(63, 81, 245, 0.3);
+  }
+}
+
+@media (max-width: 768px) {
+  .logout-btn {
+    margin-top: 24px;     /* 🔼 pulls it slightly up */
+    margin-bottom: 16px;  /* space from bottom */
+    position: relative;
+    bottom: unset;
+  }
+}
+
+
+.bell-wrapper{
+position:relative;
+cursor:pointer;
+}
+
+.bell-count{
+position:absolute;
+top:-6px;
+right:-8px;
+background:#ff3b30;
+color:white;
+font-size:11px;
+padding:2px 6px;
+border-radius:50px;
+display:none;
+}

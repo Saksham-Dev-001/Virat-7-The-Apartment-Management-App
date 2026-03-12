@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>Post Notice | VIRAT-7</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/header.css">
+
+<style>
+
+body{
+background:#f4f6fb;
+font-family:Poppins,sans-serif;
+}
+
+/* PAGE LAYOUT */
+
+.admin-layout{
+
+display:grid;
+
+grid-template-columns:1fr 1.1fr;
+
+gap:20px;
+
+padding:20px;
+
+}
+
+/* CARD */
+
+.admin-card{
+
+background:#fff;
+
+border-radius:18px;
+
+padding:20px;
+
+box-shadow:0 10px 24px rgba(0,0,0,.08);
+
+}
+
+/* TITLE */
+
+.card-title{
+
+font-size:16px;
+
+font-weight:600;
+
+margin-bottom:14px;
+
+}
+
+/* INPUT */
+
+.input-box{
+
+width:100%;
+
+padding:12px 14px;
+
+border-radius:10px;
+
+border:1px solid #ddd;
+
+margin-bottom:12px;
+
+font-size:14px;
+
+transition:.2s;
+
+}
+
+.input-box:focus{
+
+border-color:#5a67d8;
+
+outline:none;
+
+box-shadow:0 0 0 2px rgba(90,103,216,.15);
+
+}
+
+/* BUTTON */
+
+.primary-btn{
+
+width:100%;
+
+padding:12px;
+
+border:none;
+
+border-radius:12px;
+
+background:linear-gradient(135deg,#5a67d8,#667eea);
+
+color:#fff;
+
+font-weight:600;
+
+cursor:pointer;
+
+transition:.25s;
+
+}
+
+.primary-btn:hover{
+
+transform:translateY(-2px);
+
+box-shadow:0 8px 18px rgba(90,103,216,.3);
+
+}
+
+/* NOTICE LIST */
+
+.notice-list{
+
+max-height:420px;
+
+overflow:auto;
+
+padding-right:4px;
+
+}
+
+/* NOTICE CARD */
+
+.notice-card{
+
+background:#f9faff;
+
+border-radius:14px;
+
+padding:14px;
+
+margin-bottom:12px;
+
+transition:.25s;
+
+border-left:4px solid transparent;
+
+}
+
+.notice-card:hover{
+
+transform:translateY(-3px);
+
+box-shadow:0 8px 18px rgba(0,0,0,.08);
+
+}
+
+/* PINNED */
+
+.notice-card.pinned{
+
+border-left:4px solid #5a67d8;
+
+background:#f2f4ff;
+
+}
+
+/* HEADER */
+
+.notice-header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:6px;
+
+}
+
+/* TITLE */
+
+.notice-title{
+
+font-weight:600;
+
+display:flex;
+
+align-items:center;
+
+gap:8px;
+
+font-size:14px;
+
+}
+
+.notice-title i{
+color:#5a67d8;
+}
+
+/* ACTIONS */
+
+.notice-actions{
+
+display:flex;
+
+gap:6px;
+
+}
+
+.notice-actions button{
+
+border:none;
+
+background:#eef0ff;
+
+padding:6px 8px;
+
+border-radius:6px;
+
+cursor:pointer;
+
+font-size:13px;
+
+transition:.2s;
+
+}
+
+.notice-actions button:hover{
+
+background:#dfe3ff;
+
+}
+
+/* MESSAGE */
+
+.notice-desc{
+
+font-size:13px;
+
+color:#555;
+
+}
+
+/* EMPTY */
+
+.empty{
+
+text-align:center;
+
+padding:40px;
+
+color:#777;
+
+}
+
+.empty i{
+
+font-size:36px;
+
+margin-bottom:8px;
+
+color:#ccc;
+
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.admin-layout{
+
+grid-template-columns:1fr;
+
+}
+
+.notice-list{
+
+max-height:350px;
+
+}
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<header class="app-header">
+
+<button class="back-btn" onclick="history.back()">
+<i class="fa-solid fa-arrow-left"></i>
+</button>
+
+<h3 class="page-title">Post Notice</h3>
+
+<div style="width:40px"></div>
+
+</header>
+
+
+<main class="admin-layout">
+
+<!-- CREATE NOTICE -->
+
+<div class="admin-card">
+
+<div class="card-title">
+Create Notice
+</div>
+
+<input id="noticeTitle" class="input-box" placeholder="Notice title">
+
+<textarea id="noticeMessage"
+class="input-box"
+rows="4"
+placeholder="Notice message"></textarea>
+
+<button class="primary-btn" onclick="publishNotice()">
+Publish Notice
+</button>
+
+</div>
+
+
+<!-- RECENT NOTICES -->
+
+<div class="admin-card">
+
+<div class="card-title">
+Recent Notices
+</div>
+
+<div id="noticeList" class="notice-list"></div>
+
+</div>
+
+</main>
+
+
+<script type="module" src="../js/notices.js"></script>
+
+</body>
+</html>

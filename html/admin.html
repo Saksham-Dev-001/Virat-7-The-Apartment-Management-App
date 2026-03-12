@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Panel | VIRAT-7</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap"
+rel="stylesheet">
+
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/header.css">
+
+<style>
+
+body{
+background:#f4f6fb;
+font-family:Poppins,sans-serif;
+}
+
+/* PAGE WRAPPER */
+
+.admin-wrapper{
+padding:20px;
+}
+
+/* MODERN ANALYTICS BAR */
+
+.admin-stats{
+
+display:flex;
+gap:10px;
+
+overflow-x:auto;
+
+margin-bottom:18px;
+
+padding-bottom:4px;
+
+}
+
+.stat-chip{
+
+display:flex;
+align-items:center;
+gap:10px;
+
+background:#fff;
+
+padding:10px 14px;
+
+border-radius:12px;
+
+box-shadow:0 6px 14px rgba(0,0,0,.08);
+
+min-width:110px;
+
+}
+
+.stat-chip i{
+
+font-size:16px;
+color:#5a67d8;
+
+}
+
+.stat-chip b{
+
+font-size:15px;
+
+display:block;
+
+}
+
+.stat-chip span{
+
+font-size:11px;
+color:#666;
+
+}
+
+
+
+
+/* ADMIN CARDS */
+
+.admin-dashboard{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:16px;
+}
+
+.admin-card{
+background:#fff;
+border-radius:16px;
+padding:20px;
+text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+cursor:pointer;
+transition:.25s;
+}
+
+.admin-card:hover{
+transform:translateY(-6px);
+box-shadow:0 12px 30px rgba(0,0,0,.12);
+}
+
+.admin-card i{
+font-size:28px;
+color:#5a67d8;
+margin-bottom:12px;
+}
+
+.admin-card h4{
+font-size:16px;
+margin-bottom:6px;
+}
+
+.admin-card p{
+font-size:13px;
+color:#666;
+}
+
+/* ACTIVITY BUTTON */
+
+.activity-btn{
+font-size:20px;
+cursor:pointer;
+color:#444;
+}
+
+/* ACTIVITY OVERLAY */
+
+.activity-overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.45);
+display:none;
+z-index:150;
+}
+
+.activity-overlay.show{
+display:block;
+}
+
+/* ACTIVITY PANEL */
+
+.activity-panel{
+position:fixed;
+right:0;
+top:0;
+height:100vh;
+width:320px;
+background:#fff;
+transform:translateX(100%);
+transition:.3s;
+z-index:200;
+display:flex;
+flex-direction:column;
+}
+
+.activity-panel.show{
+transform:translateX(0);
+}
+
+/* HEADER */
+
+.activity-header{
+padding:16px;
+border-bottom:1px solid #eee;
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-weight:600;
+}
+
+/* LIST */
+
+.activity-list{
+flex:1;
+overflow:auto;
+padding:14px;
+}
+
+.activity-item{
+display:flex;
+gap:12px;
+padding:12px;
+border-radius:10px;
+margin-bottom:10px;
+background:#f8f9ff;
+}
+
+.activity-icon{
+width:36px;
+height:36px;
+border-radius:50%;
+background:#e8ecff;
+display:flex;
+align-items:center;
+justify-content:center;
+color:#5a67d8;
+}
+
+.activity-text h4{
+font-size:14px;
+margin-bottom:2px;
+}
+
+.activity-text p{
+font-size:12px;
+color:#555;
+}
+
+.activity-time{
+font-size:11px;
+color:#888;
+}
+
+.empty-activity{
+text-align:center;
+margin-top:60px;
+color:#777;
+}
+
+.empty-activity i{
+font-size:36px;
+margin-bottom:10px;
+color:#bbb;
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="app-header">
+
+<button class="back-btn" onclick="history.back()">
+<i class="fa-solid fa-arrow-left"></i>
+</button>
+
+<h3 class="page-title">Admin Panel</h3>
+
+<div class="activity-btn" onclick="toggleActivity()">
+<i class="fa-solid fa-clock-rotate-left"></i>
+</div>
+
+</header>
+
+
+<div class="admin-wrapper">
+
+<div class="admin-stats">
+
+<div class="stat-chip">
+<i class="fa-solid fa-users"></i>
+<div>
+<b id="totalUsers">0</b>
+<span>Residents</span>
+</div>
+</div>
+
+<div class="stat-chip">
+<i class="fa-solid fa-file-invoice"></i>
+<div>
+<b id="totalBills">0</b>
+<span>Bills</span>
+</div>
+</div>
+
+<div class="stat-chip">
+<i class="fa-solid fa-wallet"></i>
+<div>
+<b id="totalDues">₹0</b>
+<span>Dues</span>
+</div>
+</div>
+
+
+</div>
+
+
+<div class="admin-dashboard">
+
+<div class="admin-card"
+onclick="location.href='admin-post-notice.html'">
+
+<i class="fa-solid fa-bullhorn"></i>
+<h4>Post Notice</h4>
+<p>Create society notices</p>
+
+</div>
+
+
+<div class="admin-card"
+onclick="location.href='admin-users.html'">
+
+<i class="fa-solid fa-users"></i>
+<h4>Manage Users</h4>
+<p>View and control residents</p>
+
+</div>
+
+
+<div class="admin-card"
+onclick="location.href='admin-maintenance.html'">
+
+<i class="fa-solid fa-screwdriver-wrench"></i>
+<h4>Maintenance</h4>
+<p>Create dues for flats</p>
+
+</div>
+
+
+<div class="admin-card"
+onclick="location.href='admin-payments.html'">
+
+<i class="fa-solid fa-credit-card"></i>
+<h4>Payments</h4>
+<p>Monitor transactions</p>
+
+</div>
+
+<div class="admin-card"
+onclick="location.href='admin-complaints.html'">
+
+<i class="fa-solid fa-triangle-exclamation"></i>
+<h4>Complaints</h4>
+<p>Manage resident complaints</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div id="activityOverlay" class="activity-overlay"></div>
+
+<div id="activityPanel" class="activity-panel">
+
+<div class="activity-header">
+<h3>Recent Activity</h3>
+<i class="fa-solid fa-xmark" onclick="toggleActivity()"></i>
+</div>
+
+<div id="activityList" class="activity-list">
+
+<div class="empty-activity">
+<i class="fa-solid fa-clock"></i>
+<p>No activity yet</p>
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+const activityPanel=document.getElementById("activityPanel");
+const activityOverlay=document.getElementById("activityOverlay");
+
+function toggleActivity(){
+
+activityPanel.classList.toggle("show");
+activityOverlay.classList.toggle("show");
+
+}
+
+activityOverlay.onclick=toggleActivity;
+
+</script>
+
+
+<script type="module">
+
+import { auth, db } from "../js/firebase.js";
+
+import {
+doc,
+getDoc,
+collection,
+onSnapshot,
+query,
+orderBy,
+limit
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import {
+onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+/* ADMIN PROTECTION */
+
+onAuthStateChanged(auth, async (user)=>{
+
+if(!user){
+window.location.href="../login.html";
+return;
+}
+
+const snap = await getDoc(doc(db,"users",user.uid));
+
+if(!snap.exists()){
+window.location.href="../dashboard.html";
+return;
+}
+
+const data = snap.data();
+
+if(data.role !== "admin"){
+alert("Access denied");
+window.location.href="../dashboard.html";
+}
+
+});
+
+
+/* ANALYTICS */
+
+onSnapshot(collection(db,"users"),(snap)=>{
+document.getElementById("totalUsers").innerText=snap.size;
+});
+
+
+onSnapshot(collection(db,"dues"),(snap)=>{
+
+let total=0;
+let bills=0;
+
+snap.forEach(doc=>{
+const d=doc.data();
+total+=Number(d.amount);
+bills++;
+});
+
+document.getElementById("totalDues").innerText="₹"+total;
+document.getElementById("totalBills").innerText=bills;
+
+});
+
+
+onSnapshot(collection(db,"payments"),(snap)=>{
+
+let total=0;
+
+snap.forEach(doc=>{
+const p=doc.data();
+total+=Number(p.amount);
+});
+
+document.getElementById("totalPayments").innerText="₹"+total;
+
+});
+
+
+/* ACTIVITY LIST */
+
+const activityList=document.getElementById("activityList");
+
+const q=query(
+collection(db,"activities"),
+orderBy("time","desc"),
+limit(20)
+);
+
+onSnapshot(q,(snap)=>{
+
+activityList.innerHTML="";
+
+if(snap.empty){
+
+activityList.innerHTML=`
+<div class="empty-activity">
+<i class="fa-solid fa-clock"></i>
+<p>No activity yet</p>
+</div>
+`;
+
+return;
+}
+
+snap.forEach(doc=>{
+
+const a=doc.data();
+
+activityList.innerHTML+=`
+
+<div class="activity-item">
+
+<div class="activity-icon">
+<i class="fa-solid fa-${a.icon || "bell"}"></i>
+</div>
+
+<div class="activity-text">
+
+<h4>${a.title}</h4>
+<p>${a.message}</p>
+<span class="activity-time">
+${a.time?.toDate().toLocaleString() || ""}
+</span>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+});
+
+</script>
+
+</body>
+</html>

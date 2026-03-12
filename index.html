@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Apartment Management App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #eef2ff, #f8fafc);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      border-radius: 22px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+      overflow: hidden;
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .image-wrapper {
+      position: relative;
+      background: #111;
+    }
+
+    .image-wrapper img {
+      width: 100%;
+      display: block;
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+    }
+
+    .badge {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      background: rgba(0,0,0,0.65);
+      color: #fff;
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 20px;
+    }
+
+    .content {
+      padding: 24px 22px 28px;
+      text-align: center;
+    }
+
+    .content h1 {
+      margin: 10px 0 8px;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .content p {
+      margin: 0;
+      font-size: 14.5px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .features {
+      margin-top: 18px;
+      display: flex;
+      justify-content: space-around;
+      font-size: 13px;
+      color: #444;
+    }
+
+    .feature {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .feature span {
+      font-size: 18px;
+    }
+
+    .login-btn {
+      margin-top: 26px;
+      width: 100%;
+      padding: 15px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(79,70,229,0.45);
+    }
+
+    .footer {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #777;
+    }
+  </style>
+  
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9657913204112168"
+     crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+  <div class="app-container">
+
+    <!-- IMAGE -->
+    <div class="image-wrapper">
+      <img src="assets/virat7.jpg" alt="VIRAT-7 Building">
+      <div class="badge">📍 Jaipur, Rajasthan</div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+      <h1>VIRAT-7</h1>
+      <p>
+        Welcome to the VIRAT-7 Management App.  
+        Manage maintenance bills, dues, notices, and society information — all in one place.
+      </p>
+
+      <!-- MINI FEATURES -->
+      <div class="features">
+        <div class="feature">
+          <span>🧾</span>
+          Bills
+        </div>
+        <div class="feature">
+          <span>🔔</span>
+          Notices
+        </div>
+        <div class="feature">
+          <span>🏠</span>
+          Society
+        </div>
+      </div>
+
+      <!-- LOGIN BUTTON -->
+      <button class="login-btn" onclick="goLogin()">Login</button>
+
+      <div class="footer">
+        Secure access for residents & admins
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function goLogin() {
+      window.location.href = "login.html";
+    }
+  </script>
+  
+
+
+</body>
+</html>

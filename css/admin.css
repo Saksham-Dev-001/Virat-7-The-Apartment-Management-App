@@ -1,0 +1,208 @@
+/* ===== ADMIN DASHBOARD ===== */
+
+.admin-dashboard{
+padding:20px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:16px;
+}
+
+/* ===== ADMIN CARD ===== */
+
+.admin-card{
+background:#fff;
+padding:20px;
+border-radius:16px;
+box-shadow:0 8px 20px rgba(0,0,0,0.08);
+text-align:center;
+cursor:pointer;
+transition:0.2s;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+}
+
+.admin-card:hover{
+transform:translateY(-5px);
+box-shadow:0 12px 24px rgba(0,0,0,0.12);
+}
+
+.admin-card i{
+font-size:28px;
+color:#5a67d8;
+margin-bottom:10px;
+}
+
+.admin-card h4{
+font-size:16px;
+margin-bottom:6px;
+}
+
+.admin-card p{
+font-size:13px;
+color:#666;
+}
+
+
+/* ===== INPUTS ===== */
+
+.input-box{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:1px solid #ddd;
+margin-bottom:12px;
+font-size:14px;
+}
+
+
+/* ===== BUTTON ===== */
+
+.primary-btn{
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+background:linear-gradient(135deg,#5a67d8,#4c51bf);
+color:white;
+font-size:15px;
+cursor:pointer;
+}
+
+.primary-btn:hover{
+opacity:.9;
+}
+
+
+/* ===== USER ROW ===== */
+
+.user-row{
+background:#fff;
+padding:14px;
+border-radius:12px;
+margin-bottom:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 6px 14px rgba(0,0,0,.08);
+}
+
+.user-row select{
+padding:6px;
+border-radius:6px;
+}
+
+
+/* ===== PAYMENT ROW ===== */
+
+.payment-row{
+background:#fff;
+padding:14px;
+border-radius:12px;
+margin-bottom:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 6px 14px rgba(0,0,0,.08);
+}
+
+.status{
+padding:4px 10px;
+border-radius:20px;
+font-size:11px;
+font-weight:600;
+}
+
+.status.paid{
+background:#e6fffa;
+color:#047857;
+}
+
+.status.due{
+background:#fff3cd;
+color:#b7791f;
+}
+
+
+.recent-due{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px;
+border-bottom:1px solid #eee;
+font-size:14px;
+}
+
+.recent-due strong{
+color:#333;
+}
+
+.due-amount{
+font-weight:600;
+color:#5a67d8;
+}
+
+
+
+
+.summary-row{
+display:flex;
+justify-content:space-between;
+margin-bottom:10px;
+font-size:15px;
+}
+
+.recent-due{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px;
+border-bottom:1px solid #eee;
+}
+
+.due-actions button{
+margin-left:6px;
+padding:6px 10px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:12px;
+}
+
+.edit-btn{
+background:#5a67d8;
+color:#fff;
+}
+
+.delete-btn{
+background:#e53e3e;
+color:#fff;
+}
+
+
+.admin-stats{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:14px;
+margin-bottom:20px;
+}
+
+.stat-box{
+background:#fff;
+padding:16px;
+border-radius:12px;
+text-align:center;
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
+}
+
+.stat-box h3{
+font-size:20px;
+color:#5a67d8;
+margin-bottom:4px;
+}
+
+.stat-box p{
+font-size:13px;
+color:#666;
+}

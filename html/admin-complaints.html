@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>Admin Complaints | VIRAT-7</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<link rel="stylesheet" href="../css/header.css">
+
+<style>
+
+body{
+background:#f4f6fb;
+font-family:Poppins,sans-serif;
+margin:0;
+}
+
+/* MAIN */
+
+.wrapper{
+padding:20px;
+max-width:1100px;
+margin:auto;
+}
+
+/* STATS */
+
+.stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:12px;
+margin-bottom:20px;
+}
+
+.stat-card{
+background:#fff;
+border-radius:14px;
+padding:16px;
+text-align:center;
+box-shadow:0 6px 18px rgba(0,0,0,.08);
+}
+
+.stat-card b{
+font-size:18px;
+color:#5a67d8;
+}
+
+.stat-card span{
+font-size:12px;
+color:#666;
+}
+
+/* SEARCH */
+
+.search-box{
+margin-bottom:18px;
+}
+
+.search-box input{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:1px solid #ddd;
+}
+
+/* GRID */
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:18px;
+}
+
+/* CARD */
+
+.card{
+background:#fff;
+border-radius:16px;
+padding:18px;
+box-shadow:0 10px 26px rgba(0,0,0,.08);
+transition:.2s;
+position:relative;
+overflow:hidden;
+}
+
+.card:hover{
+transform:translateY(-4px);
+}
+
+/* PRIORITY STRIP */
+
+.priority-strip{
+position:absolute;
+left:0;
+top:0;
+height:100%;
+width:5px;
+}
+
+.strip-normal{
+background:#f6c445;
+}
+
+.strip-urgent{
+background:#ff5c5c;
+}
+
+/* HEADER */
+
+.card-header{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:10px;
+}
+
+/* AVATAR */
+
+.avatar{
+width:42px;
+height:42px;
+border-radius:50%;
+background:#5a67d8;
+display:flex;
+align-items:center;
+justify-content:center;
+color:#fff;
+font-weight:600;
+}
+
+/* NAME */
+
+.card-title{
+font-weight:600;
+font-size:14px;
+}
+
+.date{
+font-size:12px;
+color:#888;
+}
+
+/* MESSAGE */
+
+.card-msg{
+font-size:14px;
+margin-bottom:8px;
+color:#555;
+}
+
+/* BADGES */
+
+.badges{
+display:flex;
+gap:6px;
+margin-bottom:10px;
+}
+
+.badge{
+font-size:11px;
+padding:4px 8px;
+border-radius:6px;
+font-weight:500;
+}
+
+.priority-normal{
+background:#fff3cd;
+color:#946200;
+}
+
+.priority-urgent{
+background:#ffe5e5;
+color:#c53030;
+}
+
+.status-open{
+background:#ffe5e5;
+color:#c53030;
+}
+
+.status-progress{
+background:#e8f0ff;
+color:#3949ab;
+}
+
+.status-resolved{
+background:#e6fffa;
+color:#2f855a;
+}
+
+/* ADMIN REPLY */
+
+.reply-box{
+background:#f2f6ff;
+border-left:4px solid #5a67d8;
+padding:10px;
+border-radius:8px;
+margin-bottom:10px;
+font-size:13px;
+}
+
+/* BUTTONS */
+
+.buttons{
+display:flex;
+gap:6px;
+flex-wrap:wrap;
+}
+
+button{
+padding:6px 10px;
+border:none;
+border-radius:6px;
+font-size:12px;
+cursor:pointer;
+}
+
+.progress{ background:#fff3cd; }
+.resolve{ background:#c6f6d5; }
+.reply{ background:#dbeafe; }
+.delete{ background:#eee; }
+
+/* EMPTY */
+
+.empty{
+text-align:center;
+padding:40px;
+color:#777;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header class="app-header">
+
+<button class="back-btn" onclick="history.back()">
+<i class="fa-solid fa-arrow-left"></i>
+</button>
+
+<h3 class="page-title">Complaints</h3>
+
+<div style="width:40px"></div>
+
+</header>
+
+<div class="wrapper">
+
+<div class="stats">
+
+<div class="stat-card">
+<b id="openCount">0</b>
+<span>Open</span>
+</div>
+
+<div class="stat-card">
+<b id="progressCount">0</b>
+<span>In Progress</span>
+</div>
+
+<div class="stat-card">
+<b id="resolvedCount">0</b>
+<span>Resolved</span>
+</div>
+
+</div>
+
+<div class="search-box">
+<input id="search" placeholder="Search complaints...">
+</div>
+
+<div id="list" class="grid"></div>
+
+</div>
+
+
+<script type="module">
+
+import { db } from "../js/firebase.js";
+
+import {
+collection,
+onSnapshot,
+doc,
+updateDoc,
+deleteDoc,
+addDoc,
+serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+let complaints=[];
+
+const container=document.getElementById("list");
+const search=document.getElementById("search");
+
+const openCount=document.getElementById("openCount");
+const progressCount=document.getElementById("progressCount");
+const resolvedCount=document.getElementById("resolvedCount");
+
+
+onSnapshot(collection(db,"complaints"),(snapshot)=>{
+
+complaints=[];
+
+let open=0,progress=0,resolved=0;
+
+snapshot.forEach(d=>{
+
+const data={id:d.id,...d.data()};
+
+complaints.push(data);
+
+if(data.status==="open") open++;
+if(data.status==="progress") progress++;
+if(data.status==="resolved") resolved++;
+
+});
+
+openCount.innerText=open;
+progressCount.innerText=progress;
+resolvedCount.innerText=resolved;
+
+render(complaints);
+
+});
+
+
+function render(data){
+
+container.innerHTML="";
+
+if(data.length===0){
+
+container.innerHTML=`
+<div class="empty">
+<i class="fa-solid fa-circle-check"></i>
+<p>No complaints</p>
+</div>
+`;
+
+return;
+}
+
+data.forEach(c=>{
+
+let date="";
+
+if(c.createdAt){
+
+const d=c.createdAt.toDate();
+
+date=d.toLocaleDateString()+" "+d.toLocaleTimeString();
+
+}
+
+container.innerHTML+=`
+
+<div class="card">
+
+<div class="priority-strip strip-${(c.priority||"normal").toLowerCase()}"></div>
+
+<div class="card-header">
+
+<div class="avatar">
+${c.userName?.charAt(0) || "U"}
+</div>
+
+<div>
+
+<div class="card-title">
+${c.userName || "Resident"} • Flat ${c.flat || "N/A"}
+</div>
+
+<div class="date">${date}</div>
+
+</div>
+
+</div>
+
+<div class="card-msg"><b>${c.title}</b></div>
+
+<div class="card-msg">${c.message}</div>
+
+${c.adminReply ? `
+<div class="reply-box">
+<b>Admin Reply:</b>
+${c.adminReply}
+</div>
+` : ""}
+
+<div class="badges">
+
+<span class="badge priority-${(c.priority||"normal").toLowerCase()}">
+${c.priority}
+</span>
+
+<span class="badge status-${c.status}">
+${c.status}
+</span>
+
+</div>
+
+<div class="buttons">
+
+<button class="progress"
+onclick="setStatus('${c.id}','progress')">
+Progress
+</button>
+
+<button class="resolve"
+onclick="setStatus('${c.id}','resolved')">
+Resolve
+</button>
+
+<button class="reply"
+onclick="replyComplaint('${c.id}','${c.userId}')">
+Reply
+</button>
+
+<button class="delete"
+onclick="deleteComplaint('${c.id}')">
+Delete
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+
+/* SEARCH */
+
+search.onkeyup=()=>{
+
+const text=search.value.toLowerCase();
+
+const filtered=complaints.filter(c=>
+
+c.userName?.toLowerCase().includes(text) ||
+c.title?.toLowerCase().includes(text)
+
+);
+
+render(filtered);
+
+};
+
+
+/* STATUS */
+
+window.setStatus=async function(id,status){
+
+await updateDoc(doc(db,"complaints",id),{
+status
+});
+
+};
+
+
+/* REPLY */
+
+window.replyComplaint = async function(id,userId){
+
+const reply = prompt("Enter reply");
+
+if(!reply) return;
+
+/* SAVE REPLY */
+
+await updateDoc(doc(db,"complaints",id),{
+adminReply:reply
+});
+
+/* CREATE NOTIFICATION */
+
+await addDoc(collection(db,"notifications"),{
+
+to:userId,
+title:"Admin Reply",
+message:"Admin replied to your complaint",
+createdAt:serverTimestamp()
+
+});
+
+alert("Reply sent");
+
+};
+
+
+/* DELETE */
+
+window.deleteComplaint=async function(id){
+
+if(!confirm("Delete complaint?")) return;
+
+await deleteDoc(doc(db,"complaints",id));
+
+};
+
+</script>
+
+</body>
+</html>

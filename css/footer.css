@@ -1,0 +1,94 @@
+.app-footer {
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 40px;
+  padding: 18px 14px;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.04);
+}
+
+/* MAIN ROW */
+.footer-row {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* COMMON */
+.footer-block h4 {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.footer-block p,
+.footer-block span {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.4;
+}
+
+.footer-block a {
+  color: #5a67d8;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* LEFT */
+.footer-block.left {
+  flex: 1.6;
+}
+
+/* CENTER */
+.footer-block.center {
+  flex: 1;
+  text-align: center;
+}
+
+.footer-block.center h3 {
+  font-size: 20px;
+  color: #5a67d8;
+}
+
+/* RIGHT */
+.footer-block.right {
+  flex: 0.6;
+  text-align: right;
+}
+
+.footer-block.right img {
+  width: 70px;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+  .footer-row {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-block.right {
+    text-align: center;
+  }
+}
+
+
+
+.bell-wrapper{
+position:relative;
+cursor:pointer;
+}
+
+.bell-count{
+position:absolute;
+top:-6px;
+right:-6px;
+background:red;
+color:white;
+font-size:11px;
+padding:2px 6px;
+border-radius:50%;
+}

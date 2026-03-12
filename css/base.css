@@ -1,0 +1,15 @@
+/* ===== BASE / GLOBAL ===== */
+
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f4f6fb;
+}
+
+button {
+  cursor: pointer;
+}

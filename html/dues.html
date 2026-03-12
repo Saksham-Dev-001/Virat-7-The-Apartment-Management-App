@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>My Dues | VIRAT-7</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/header.css">
+<link rel="stylesheet" href="../css/dues.css">
+
+</head>
+
+<body>
+
+<header class="app-header">
+
+<button class="back-btn" id="backBtn">
+<i class="fa-solid fa-arrow-left"></i>
+</button>
+
+<h3 class="page-title">My Dues</h3>
+
+<div class="header-spacer"></div>
+
+</header>
+
+<main class="page-content" id="duesContainer">
+
+<div class="card">
+<i class="fa-solid fa-spinner fa-spin"></i>
+<p>Loading dues...</p>
+</div>
+
+</main>
+
+<script type="module">
+
+import { auth, db } from "../js/firebase.js";
+
+import {
+collection,
+query,
+where,
+onSnapshot,
+doc,
+getDoc,
+addDoc,
+serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import {
+onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+const container = document.getElementById("duesContainer");
+
+
+onAuthStateChanged(auth, async (user) => {
+
+if (!user) {
+window.location.href = "../login.html";
+return;
+}
+
+/* ===============================
+GET USER DATA
+=============================== */
+
+const userRef = doc(db,"users",user.uid);
+const snap = await getDoc(userRef);
+
+if(!snap.exists()) return;
+
+const userData = snap.data();
+const userFlat = userData.flat;
+
+
+/* ===============================
+LOAD USER DUES
+=============================== */
+
+const q = query(
+collection(db,"dues"),
+where("flat","==",userFlat)
+);
+
+onSnapshot(q,(snapshot)=>{
+
+container.innerHTML="";
+
+if(snapshot.empty){
+
+container.innerHTML=`
+<div class="card">
+<i class="fa-solid fa-circle-check fa-2x"></i>
+<h3>No Pending Dues</h3>
+<p>You’re all clear 🎉</p>
+</div>
+`;
+
+return;
+
+}
+
+snapshot.forEach(docSnap=>{
+
+const d = docSnap.data();
+
+container.innerHTML+=`
+
+<div class="card">
+
+<i class="fa-solid fa-wallet fa-2x"></i>
+
+<h3>₹ ${d.amount}</h3>
+
+<p>${d.type} • ${d.month}</p>
+
+<p>Status:
+<strong style="color:${d.status==="paid"?"green":"red"}">
+${d.status}
+</strong>
+</p>
+
+${d.status==="pending" ? `
+<button onclick="payDue('${docSnap.id}','${d.amount}','${userFlat}')">
+Pay Now
+</button>
+` : ""}
+
+</div>
+
+`;
+
+});
+
+});
+
+});
+
+
+/* ===============================
+PAY DUE FUNCTION
+=============================== */
+
+window.payDue = async function(dueId,amount,flat){
+
+const proof = prompt("Paste payment screenshot URL");
+
+if(!proof) return;
+
+try{
+
+await addDoc(collection(db,"payments"),{
+
+dueId:dueId,
+flat:flat,
+amount:amount,
+proof:proof,
+status:"pending",
+createdAt:serverTimestamp()
+
+});
+
+alert("Payment submitted for admin approval");
+
+}catch(err){
+
+console.error("Payment error",err);
+alert("Payment failed");
+
+}
+
+};
+
+</script>
+
+
+<script>
+
+document.getElementById("backBtn").onclick=()=>{
+window.location.href="../dashboard.html";
+};
+
+</script>
+
+</body>
+</html>

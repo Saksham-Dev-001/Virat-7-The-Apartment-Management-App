@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Profile | VIRAT-7</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/header.css">
+
+<style>
+
+body{
+background:#f4f6fb;
+font-family:Poppins,sans-serif;
+}
+
+main{
+padding:20px;
+}
+
+.profile-card{
+background:#fff;
+padding:24px;
+border-radius:16px;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+text-align:center;
+max-width:420px;
+margin:auto;
+}
+
+.avatar{
+width:90px;
+height:90px;
+border-radius:50%;
+background:#5a67d8;
+color:#fff;
+font-size:34px;
+font-weight:700;
+display:flex;
+align-items:center;
+justify-content:center;
+margin:auto;
+margin-bottom:14px;
+}
+
+.profile-info{
+margin-top:20px;
+text-align:left;
+}
+
+.profile-info div{
+display:flex;
+justify-content:space-between;
+padding:10px 0;
+border-bottom:1px solid #eee;
+font-size:14px;
+}
+
+.logout-btn{
+margin-top:20px;
+width:100%;
+padding:12px;
+background:#e53e3e;
+color:#fff;
+border:none;
+border-radius:12px;
+font-size:15px;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="app-header">
+
+<button class="back-btn" id="backBtn">
+<i class="fa-solid fa-arrow-left"></i>
+</button>
+
+<h3 class="page-title">Profile</h3>
+
+<div class="header-spacer"></div>
+
+</header>
+
+<main>
+
+<div class="profile-card">
+
+<div class="avatar" id="avatar"></div>
+
+<h3 id="userName"></h3>
+
+<small id="pRole"></small>
+
+<div class="profile-info">
+
+<div>
+<span>Email</span>
+<span id="pEmail"></span>
+</div>
+
+<div>
+<span>Flat</span>
+<span id="pFlat"></span>
+</div>
+
+<div>
+<span>Phone</span>
+<span id="pPhone"></span>
+</div>
+
+</div>
+
+<button id="logoutBtn" class="logout-btn">Logout</button>
+
+</div>
+
+</main>
+
+
+<script type="module">
+
+import { loadUserData } from "../js/user-data.js";
+import { logoutUser } from "../js/auth.js";
+
+document.getElementById("logoutBtn").onclick = logoutUser;
+
+document.getElementById("backBtn").onclick = ()=>{
+window.location.href="../dashboard.html";
+};
+
+loadUserData((user)=>{
+
+document.getElementById("userName").innerText=user.name;
+document.getElementById("pEmail").innerText=user.email;
+document.getElementById("pFlat").innerText=user.flat;
+document.getElementById("pPhone").innerText=user.phone;
+document.getElementById("pRole").innerText=user.role;
+
+document.getElementById("avatar").innerText =
+user.name[0].toUpperCase();
+
+});
+
+</script>
+
+</body>
+</html>
