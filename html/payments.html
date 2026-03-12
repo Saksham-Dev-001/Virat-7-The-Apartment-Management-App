@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>Payments | VIRAT-7</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/header.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<style>
+
+/* ===== PAGE ===== */
+
+body{
+background:#f4f6fb;
+font-family:Poppins, sans-serif;
+margin:0;
+}
+
+
+/* ===== WRAPPER ===== */
+
+.wrapper{
+padding:18px;
+max-width:900px;
+margin:auto;
+}
+
+
+/* ===== CARD ===== */
+
+.card{
+
+background:#fff;
+
+border-radius:16px;
+
+padding:16px;
+
+margin-bottom:14px;
+
+box-shadow:0 8px 18px rgba(0,0,0,.08);
+
+display:flex;
+flex-direction:column;
+gap:6px;
+
+}
+
+
+/* ===== TOP ===== */
+
+.row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+
+/* ===== AMOUNT ===== */
+
+.amount{
+font-size:18px;
+font-weight:600;
+color:#5a67d8;
+}
+
+
+/* ===== TEXT ===== */
+
+.sub{
+font-size:13px;
+color:#666;
+}
+
+
+/* ===== BADGE ===== */
+
+.badge{
+
+padding:4px 8px;
+
+border-radius:6px;
+
+font-size:11px;
+
+font-weight:500;
+
+}
+
+
+.paid{
+background:#c6f6d5;
+color:#065f46;
+}
+
+.pending{
+background:#ffe5e5;
+color:#c53030;
+}
+
+
+/* ===== EMPTY ===== */
+
+.empty{
+text-align:center;
+padding:40px;
+color:#777;
+}
+
+.empty i{
+font-size:36px;
+margin-bottom:10px;
+color:#ccc;
+}
+
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</head>
+
+<body>
+
+
+<!-- ===== HEADER ===== -->
+
+<header class="app-header">
+
+<button class="back-btn">
+<i class="fa-solid fa-arrow-left"></i>
+</button>
+
+<h3 class="page-title">Payments</h3>
+
+<div class="header-spacer"></div>
+
+</header>
+
+
+<!-- ===== CONTENT ===== -->
+
+<div class="wrapper">
+
+<div id="paymentList"></div>
+
+</div>
+
+
+
+<!-- ===== BACK FIX ===== -->
+
+<script>
+
+const backBtn = document.querySelector(".back-btn");
+
+if(backBtn){
+
+backBtn.onclick = () => {
+
+if(history.length > 1){
+
+history.back();
+
+}else{
+
+location.href = "dashboard.html";
+
+}
+
+};
+
+}
+
+</script>
+
+
+<!-- ===== JS ===== -->
+
+<script type="module" src="../js/payments.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</body>
+</html>
