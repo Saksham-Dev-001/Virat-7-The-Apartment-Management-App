@@ -1,7 +1,7 @@
 {
   "name": "VIRAT-7",
   "short_name": "VIRAT7",
-  "start_url": "/html/dashboard.html",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#5a67d8",
