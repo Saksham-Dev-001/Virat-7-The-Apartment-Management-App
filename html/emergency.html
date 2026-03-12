@@ -1,344 +1,262 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Emergency | VIRAT-7</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Notice Board | VIRAT-7</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<title>Emergency | VIRAT-7</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/header.css">
 
-  <!-- Base -->
-  <link rel="stylesheet" href="../css/base.css">
-  <link rel="stylesheet" href="../css/header.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-  <style>
-    body {
-      background: #f4f6fb;
-      font-family: Poppins, sans-serif;
-    }
+<style>
 
-    main {
-      padding: 16px;
-    }
+/* ===== PAGE ===== */
 
-    /* CATEGORY CHIPS */
-    .filters {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      margin-bottom: 16px;
-    }
+body{
+margin:0;
+font-family:Poppins, sans-serif;
+background:#eef1f8;
+}
 
-    .chip {
-      padding: 6px 14px;
-      border-radius: 20px;
-      background: #eef1ff;
-      color: #5a67d8;
-      font-size: 13px;
-      white-space: nowrap;
-      cursor: pointer;
-      font-weight: 500;
-    }
+/* ===== CONTENT ===== */
 
-    .chip.active {
-      background: #5a67d8;
-      color: #fff;
-    }
+.page-content{
+padding:16px;
+display:flex;
+flex-direction:column;
+gap:14px;
+}
 
-    /* NOTICE CARD */
-    .notice-card {
-      background: #fff;
-      border-radius: 14px;
-      padding: 16px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-      margin-bottom: 14px;
-    }
 
-    .notice-card.important {
-      border-left: 4px solid #e53e3e;
-      background: #fff5f5;
-    }
+/* ===== CARD ===== */
 
-    .notice-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 600;
-      font-size: 15px;
-      margin-bottom: 6px;
-    }
+.emergency-card{
 
-    .notice-title i {
-      color: #5a67d8;
-      font-size: 18px;
-    }
+background:#fff;
+border-radius:16px;
+padding:16px;
 
-    .notice-desc {
-      font-size: 13px;
-      color: #555;
-      margin-bottom: 10px;
-    }
+display:flex;
+align-items:center;
+gap:14px;
 
-    .notice-meta {
-      font-size: 12px;
-      color: #777;
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
+box-shadow:0 6px 16px rgba(0,0,0,.08);
 
-    /* EMPTY STATE */
-    .empty {
-      text-align: center;
-      color: #777;
-      margin-top: 60px;
-    }
+cursor:pointer;
+transition:.2s;
 
-    .empty i {
-      font-size: 40px;
-      color: #c3c8ff;
-      margin-bottom: 10px;
-    }
-  </style>
+}
+
+.emergency-card:active{
+transform:scale(.97);
+}
+
+
+/* ===== ICON ===== */
+
+.emergency-card i{
+
+font-size:22px;
+width:36px;
+text-align:center;
+
+color:#5a67d8;
+
+}
+
+
+/* ===== TEXT ===== */
+
+.emergency-card strong{
+
+font-size:16px;
+display:block;
+
+}
+
+.emergency-card span{
+
+font-size:13px;
+color:#666;
+
+}
+
+
+/* COLORS */
+
+.danger i{
+color:#e53e3e;
+}
+
+.whatsapp i{
+color:#25D366;
+}
+
+.police i{
+color:#2563eb;
+}
+
+.fire i{
+color:#f97316;
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-<!-- HEADER -->
+
+<!-- ===== HEADER ===== -->
+
 <header class="app-header">
-  <button class="back-btn" id="backBtn">
-  <i class="fa-solid fa-arrow-left"></i>
+
+<button class="back-btn" onclick="history.back()">
+<i class="fa-solid fa-arrow-left"></i>
 </button>
-  <h3 class="page-title">Notice Board</h3>
-  <div style="width:40px"></div>
+
+<h3 class="page-title">Emergency</h3>
+
+<div class="header-spacer"></div>
+
 </header>
 
-<main>
 
-  <!-- FILTERS -->
-  <div class="filters">
-    <div class="chip active">All</div>
-    <div class="chip">Maintenance</div>
-    <div class="chip">Events</div>
-    <div class="chip">Billing</div>
-    <div class="chip">Emergency</div>
-  </div>
 
-  <!-- IMPORTANT NOTICE -->
-  <div class="notice-card important">
-    <div class="notice-title">
-      <i class="fa-solid fa-triangle-exclamation"></i>
-      Water Supply Interruption
-    </div>
-    <div class="notice-desc">
-      Water supply will be unavailable from 10 AM – 2 PM due to overhead tank cleaning.
-    </div>
-    <div class="notice-meta">
-      <span>📅 25 Dec 2025</span>
-      <span>👤 Admin</span>
-    </div>
-  </div>
+<!-- ===== CONTENT ===== -->
 
-  <!-- NORMAL NOTICE -->
-  <div class="notice-card">
-    <div class="notice-title">
-      <i class="fa-solid fa-bullhorn"></i>
-      Ganesh Chaturthi Celebration
-    </div>
-    <div class="notice-desc">
-      Join us at the clubhouse for Ganesh Chaturthi celebrations at 7 PM.
-    </div>
-    <div class="notice-meta">
-      <span>📅 27 Dec 2025</span>
-      <span>👤 Committee</span>
-    </div>
-  </div>
+<main class="page-content">
 
-  <!-- BILLING NOTICE -->
-  <div class="notice-card">
-    <div class="notice-title">
-      <i class="fa-solid fa-file-invoice"></i>
-      Maintenance Due Reminder
-    </div>
-    <div class="notice-desc">
-      Please clear August maintenance dues before 31st December.
-    </div>
-    <div class="notice-meta">
-      <span>📅 28 Dec 2025</span>
-      <span>👤 Admin</span>
-    </div>
-  </div>
+
+<!-- ADMIN -->
+
+<div
+class="emergency-card danger"
+onclick="callNumber('+919351520926')">
+
+<i class="fa-solid fa-user"></i>
+
+<div>
+
+<strong>Call Admin</strong>
+
+<span>Apartment management</span>
+
+</div>
+
+</div>
+
+
+
+<!-- SECURITY -->
+
+<div
+class="emergency-card danger"
+onclick="callNumber('+919351520926')">
+
+<i class="fa-solid fa-user-shield"></i>
+
+<div>
+
+<strong>Call Security</strong>
+
+<span>Gate & Guards</span>
+
+</div>
+
+</div>
+
+
+
+<!-- POLICE -->
+
+<div
+class="emergency-card police"
+onclick="callNumber('100')">
+
+<i class="fa-solid fa-shield-halved"></i>
+
+<div>
+
+<strong>Police</strong>
+
+<span>Emergency help</span>
+
+</div>
+
+</div>
+
+
+
+<!-- FIRE -->
+
+<div
+class="emergency-card fire"
+onclick="callNumber('101')">
+
+<i class="fa-solid fa-fire-extinguisher"></i>
+
+<div>
+
+<strong>Fire Brigade</strong>
+
+<span>Fire emergency</span>
+
+</div>
+
+</div>
+
+
+
+<!-- WHATSAPP -->
+
+<div
+class="emergency-card whatsapp"
+onclick="openWhatsApp()">
+
+<i class="fa-brands fa-whatsapp"></i>
+
+<div>
+
+<strong>Society WhatsApp</strong>
+
+<span>Residents help group</span>
+
+</div>
+
+</div>
+
 
 </main>
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const backBtn = document.getElementById("backBtn");
 
-    if (!backBtn) return;
-
-    backBtn.addEventListener("click", () => {
-      // If history exists → go back
-      if (document.referrer && document.referrer !== "") {
-        window.history.back();
-      } else {
-        // HARD fallback (this fixes Notice Board)
-        window.location.href = "../dashboard.html";
-      }
-    });
-  });
-</script>
-
-<script type="module" src="../js/firebase.js"></script>
-<script type="module" src="../js/admin.js"></script>
-
-</body>
-</html>/6.5.0/css/all.min.css">
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Poppins, sans-serif;
-      background: #f4f6fb;
-    }
-
-    /* HEADER */
-    .app-header {
-      position: sticky;
-      top: 0;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      padding: 12px 16px;
-      box-shadow: 0 2px 10px rgba(0,0,0,.08);
-    }
-
-    .back-btn {
-      width: 40px;
-      height: 40px;
-      border: none;
-      border-radius: 50%;
-      background: #f0f2ff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-
-    .title {
-      flex: 1;
-      text-align: center;
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    /* CONTENT */
-    main {
-      padding: 20px;
-      display: grid;
-      gap: 16px;
-    }
-
-    .emergency-card {
-      background: #fff;
-      padding: 18px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      box-shadow: 0 8px 20px rgba(0,0,0,.08);
-      cursor: pointer;
-    }
-
-    .emergency-card i {
-      font-size: 22px;
-      width: 36px;
-      text-align: center;
-      color: #5a67d8;
-    }
-
-    .emergency-card strong {
-      font-size: 16px;
-      display: block;
-    }
-
-    .emergency-card span {
-      font-size: 13px;
-      color: #666;
-    }
-
-    .danger i { color: #e53e3e; }
-    .whatsapp i { color: #25D366; }
-  </style>
-</head>
-
-<body>
-
-<header class="app-header">
-  <button class="back-btn" onclick="history.back()">
-    <i class="fa-solid fa-arrow-left"></i>
-  </button>
-  <div class="title">Emergency</div>
-  <div style="width:40px"></div>
-</header>
-
-<main>
-
-  <!-- ADMIN -->
-  <div class="emergency-card danger" onclick="callNumber('+9193515XXXXX')">
-    <i class="fa-solid fa-user"></i>
-    <div>
-      <strong>Call Admin</strong>
-      <span>Apartment management</span>
-    </div>
-  </div>
-
-  <!-- SECURITY -->
-  <div class="emergency-card danger" onclick="callNumber('+9193515XXXXX')">
-    <i class="fa-solid fa-user-shield"></i>
-    <div>
-      <strong>Call Security</strong>
-      <span>Gate & guards</span>
-    </div>
-  </div>
-
-  <!-- WHATSAPP -->
-  <div class="emergency-card whatsapp" onclick="openWhatsApp()">
-    <i class="fa-brands fa-whatsapp"></i>
-    <div>
-      <strong>Society WhatsApp</strong>
-      <span>Instant help from residents</span>
-    </div>
-  </div>
-
-</main>
 
 <script>
-  function callNumber(number) {
-    window.location.href = `tel:${number}`;
-  }
 
-  function openWhatsApp() {
-    window.open(
-      "https://whatsapp.com/channel/0029VbBzCYX545uthpIC6N1q",
-      "_blank"
-    );
-  }
+function callNumber(number){
+
+window.location.href = "tel:" + number;
+
+}
+
+function openWhatsApp(){
+
+window.open(
+"https://whatsapp.com/channel/0029VbBzCYX545uthpIC6N1q",
+"_blank"
+);
+
+}
+
 </script>
+
 
 </body>
 </html>

@@ -17,6 +17,8 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 const list = document.getElementById("paymentList");
+const totalBox = document.getElementById("totalPaid");
+
 
 
 /* ================= AUTH ================= */
@@ -52,7 +54,7 @@ console.error(err);
 
 
 
-/* ================= LOAD PAYMENTS ================= */
+/* ================= LOAD ================= */
 
 function loadPayments(flat){
 
@@ -65,15 +67,19 @@ onSnapshot(q,(snap)=>{
 
 list.innerHTML = "";
 
+let total = 0;
+let html = [];
+
+
+/* ===== EMPTY ===== */
+
 if(snap.empty){
 
+totalBox.innerText = "Total Paid ₹0";
 list.innerHTML = emptyHtml();
 return;
 
 }
-
-let total = 0;
-let html = [];
 
 
 /* ===== LOOP ===== */
@@ -126,7 +132,7 @@ html.push(`
 
 <div class="card">
 
-<div style="display:flex;justify-content:space-between">
+<div class="row">
 
 <div>
 
@@ -184,29 +190,17 @@ Paid
 });
 
 
-/* ===== SHOW RESULT ===== */
+/* ===== SHOW ===== */
 
 if(total > 0){
 
-list.innerHTML += `
+totalBox.innerText = "Total Paid ₹ " + total;
 
-<div class="card">
-
-<div class="amount">
-Total Paid ₹ ${total}
-</div>
-
-<div class="sub">
-Payment history
-</div>
-
-</div>
-
-`;
-
-list.innerHTML += html.reverse().join("");
+list.innerHTML = html.reverse().join("");
 
 }else{
+
+totalBox.innerText = "Total Paid ₹0";
 
 list.innerHTML = emptyHtml();
 
@@ -227,6 +221,7 @@ return `
 <div class="empty">
 
 <i class="fa-solid fa-wallet"></i>
+
 <p>No payments yet</p>
 
 </div>
@@ -237,7 +232,7 @@ return `
 
 
 
-/* ================= PDF RECEIPT ================= */
+/* ================= PDF ================= */
 
 window.downloadReceipt = function(
 amount,
@@ -271,8 +266,6 @@ logo.src = "../assets/logo.png";
 
 logo.onload = function(){
 
-/* HEADER */
-
 doc.setFillColor(90,103,216);
 doc.rect(0,0,210,25,"F");
 
@@ -284,26 +277,17 @@ doc.text("VIRAT-7 Society",30,14);
 
 doc.setFontSize(10);
 doc.text(
-"Virat 7, 53, Heerabari A, Niwaru Rd, Opposite Bank Of Baroda, Jhotwara, Jaipur, Rajasthan 302012",
+"Virat 7, Jaipur",
 30,
 20
 );
 
-
-/* RESET */
-
 doc.setTextColor(0,0,0);
-
-
-/* TITLE */
 
 doc.setFontSize(14);
 doc.text("Payment Receipt",20,40);
 
 doc.line(20,43,190,43);
-
-
-/* DETAILS */
 
 doc.setFontSize(12);
 
@@ -328,42 +312,9 @@ doc.text(fullDate,70,105);
 doc.text("Status:",20,115);
 doc.text("Paid",70,115);
 
-
-/* STAMP */
-
 doc.setTextColor(200,0,0);
 doc.setFontSize(18);
 doc.text("PAID",140,90,{angle:20});
-
-
-/* FOOTER */
-
-doc.setTextColor(0,0,0);
-
-doc.line(20,130,190,130);
-
-doc.setFontSize(10);
-
-doc.text(
-"This is computer generated receipt",
-20,
-140
-);
-
-doc.text(
-"Authorized Signature",
-140,
-150
-);
-
-doc.text(
-"VIRAT-7 Society",
-140,
-155
-);
-
-
-/* SAVE */
 
 doc.save("receipt-" + receipt + ".pdf");
 

@@ -36,25 +36,26 @@ margin:auto;
 /* ===== CARD ===== */
 
 .card{
-
 background:#fff;
-
 border-radius:16px;
-
 padding:16px;
-
 margin-bottom:14px;
-
 box-shadow:0 8px 18px rgba(0,0,0,.08);
-
 display:flex;
 flex-direction:column;
 gap:6px;
-
 }
 
 
-/* ===== TOP ===== */
+/* ===== SUMMARY CARD ===== */
+
+.summary{
+background:linear-gradient(135deg,#5a67d8,#4c51bf);
+color:white;
+}
+
+
+/* ===== ROW ===== */
 
 .row{
 display:flex;
@@ -71,6 +72,11 @@ font-weight:600;
 color:#5a67d8;
 }
 
+.summary .amount{
+color:white;
+font-size:20px;
+}
+
 
 /* ===== TEXT ===== */
 
@@ -79,21 +85,19 @@ font-size:13px;
 color:#666;
 }
 
+.summary .sub{
+color:#e0e7ff;
+}
+
 
 /* ===== BADGE ===== */
 
 .badge{
-
 padding:4px 8px;
-
 border-radius:6px;
-
 font-size:11px;
-
 font-weight:500;
-
 }
-
 
 .paid{
 background:#c6f6d5;
@@ -148,6 +152,23 @@ color:#ccc;
 
 <div class="wrapper">
 
+<!-- TOTAL CARD -->
+
+<div class="card summary">
+
+<div class="amount" id="totalPaid">
+Total Paid ₹0
+</div>
+
+<div class="sub">
+Payment history
+</div>
+
+</div>
+
+
+<!-- LIST -->
+
 <div id="paymentList"></div>
 
 </div>
@@ -165,13 +186,9 @@ if(backBtn){
 backBtn.onclick = () => {
 
 if(history.length > 1){
-
 history.back();
-
 }else{
-
 location.href = "dashboard.html";
-
 }
 
 };
