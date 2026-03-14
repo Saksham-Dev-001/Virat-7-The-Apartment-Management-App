@@ -13,3 +13,72 @@ body {
 button {
   cursor: pointer;
 }
+
+
+
+/* ===== THEME COLORS ===== */
+
+:root {
+
+--bg:#f4f6fb;
+--card:#ffffff;
+--text:#222;
+--header:#ffffff;
+
+}
+
+body.dark {
+
+--bg:#121212;
+--card:#1e1e1e;
+--text:#f1f1f1;
+--header:#1a1a1a;
+
+}
+
+
+/* ================= THEME ================= */
+
+:root{
+
+--bg:#f4f6fb;
+--card:#ffffff;
+--text:#222;
+--header:#ffffff;
+--menu:#ffffff;
+
+}
+
+body.dark{
+
+--bg:#121212;
+--card:#1e1e1e;
+--text:#f1f1f1;
+--header:#1a1a1a;
+--menu:#1e1e1e;
+
+}
+
+/* apply */
+
+body{
+background:var(--bg);
+color:var(--text);
+}
+
+.card{
+background:var(--card);
+color:var(--text);
+}
+
+.app-header{
+background:var(--header);
+color:var(--text);
+}
+
+.side-menu,
+.menu,
+.drawer{
+background:var(--menu);
+color:var(--text);
+}

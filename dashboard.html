@@ -142,66 +142,220 @@ font-size:13px;
 color:#666
 }
 
-/* SIDE MENU */
+/* ===== PROFILE TOP ===== */
+
+.profile-top{
+
+padding:22px 16px 18px;
+
+background:linear-gradient(
+135deg,
+#5a67d8,
+#6676e0
+);
+
+color:white;
+
+border-bottom-left-radius:16px;
+border-bottom-right-radius:16px;
+
+cursor:pointer;
+
+}
+
+
+.profile-row{
+
+display:flex;
+align-items:center;
+gap:14px;
+
+}
+
+
+.profile-pic{
+
+width:48px;
+height:48px;
+
+border-radius:50%;
+
+background:white;
+color:#5a67d8;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+font-weight:700;
+font-size:20px;
+
+box-shadow:0 4px 12px rgba(0,0,0,.25);
+
+}
+
+
+.profile-row h4{
+
+margin:0;
+font-size:16px;
+font-weight:600;
+
+}
+
+.profile-row small{
+
+opacity:.9;
+font-size:13px;
+
+}
+
+/* ===== OVERLAY ===== */
 
 .menu-overlay{
 position:fixed;
 inset:0;
-background:rgba(0,0,0,.45);
+background:rgba(0,0,0,.22);
 display:none;
-z-index:99
+z-index:99;
+transition:.2s;
 }
 
 .menu-overlay.show{
-display:block
+display:block;
 }
 
+
+/* ===== MENU ===== */
+
 .side-menu{
+
 position:fixed;
 top:0;
 right:0;
-width:260px;
+
+width:235px;
 height:100vh;
-background:#fff;
+
+background:#f4f6fb;
+
 transform:translateX(100%);
-transition:.3s;
+transition:.22s ease;
+
 z-index:100;
+
 display:flex;
-flex-direction:column
+flex-direction:column;
+
+box-shadow:-8px 0 22px rgba(0,0,0,.12);
+
 }
+
+
+/* show */
 
 .side-menu.show{
-transform:translateX(0)
+transform:translateX(0);
 }
+
+
+/* ===== TOP ===== */
 
 .menu-top{
-padding:20px;
-background:#5a67d8;
-color:#fff
+
+padding:20px 16px;
+box-shadow:0 4px 12px rgba(0,0,0,.2);
+background:linear-gradient(
+135deg,
+#5a67d8,
+#6676e0
+);
+
+color:white;
+
+border-bottom-left-radius:14px;
+border-bottom-right-radius:14px;
+
 }
+
+.menu-top h4{
+margin:0;
+font-size:16px;
+font-weight:600;
+}
+
+.menu-top small{
+opacity:.9;
+}
+
+
+/* ===== LIST ===== */
 
 .menu-list{
+
 flex:1;
-padding:10px
+
+padding:10px 10px 0;
+
+display:flex;
+
+flex-direction:column;
+
+gap:8px;
+
 }
+
+
+/* ===== ITEM ===== */
 
 .menu-item{
-padding:12px;
-border-radius:8px;
+
+background:#ffffff;
+
+padding:11px 12px;
+
+border-radius:10px;
+
 display:flex;
+
 gap:12px;
+
 align-items:center;
-cursor:pointer
+
+cursor:pointer;
+
+font-size:14px;
+
+box-shadow:0 3px 8px rgba(0,0,0,.06);
+
+transition:.15s;
+
 }
+
+.menu-item i{
+color:#5a67d8;
+width:18px;
+font-size:14px;
+}
+
+
+/* hover */
 
 .menu-item:hover{
-background:#f0f2ff
+
+transform:translateY(-1px);
+
+box-shadow:0 5px 12px rgba(0,0,0,.08);
+
 }
 
-.menu-item.logout{
-background:#ffe5e5;
-color:#c53030
+
+/* admin */
+
+#adminMenu{
+background:#ffffff;
 }
+
 
 </style>
 </head>
@@ -212,46 +366,81 @@ color:#c53030
 
 <nav id="sideMenu" class="side-menu">
 
-<div class="menu-top">
-<h4 id="drawerName">User</h4>
-<small id="drawerFlat">Flat -</small>
+<div class="menu-top profile-top" onclick="goToPage('html/profile.html')">
+
+<div class="profile-row">
+
+<div class="profile-pic" id="menuAvatar">
+A
 </div>
+
+<div>
+
+<h4 id="drawerName">User</h4>
+<small id="drawerFlat">Flat</small>
+
+</div>
+
+</div>
+
+</div>
+
 
 <div class="menu-list">
 
 <div class="menu-item" onclick="goToPage('dashboard.html')">
-<i class="fa-solid fa-house"></i> Dashboard
+<i class="fa-solid fa-house"></i>
+Dashboard
 </div>
 
 <div class="menu-item" onclick="goToPage('html/dues.html')">
-<i class="fa-solid fa-wallet"></i> My Dues
+<i class="fa-solid fa-wallet"></i>
+My Dues
 </div>
 
-<div class="menu-item" onclick="goToPage('html/bills.html')">
-<i class="fa-solid fa-file-invoice"></i> Monthly Bills
+<div class="menu-item" onclick="goToPage('html/payments.html')">
+<i class="fa-solid fa-credit-card"></i>
+Payments
 </div>
 
 <div class="menu-item" onclick="goToPage('html/notices.html')">
-<i class="fa-solid fa-bullhorn"></i> Notice Board
+<i class="fa-solid fa-bullhorn"></i>
+Notice Board
 </div>
 
-<div class="menu-item" onclick="goToPage('html/profile.html')">
-<i class="fa-solid fa-user"></i> Profile
+<div class="menu-item" onclick="goToPage('html/complaints.html')">
+<i class="fa-solid fa-triangle-exclamation"></i>
+Complaints
 </div>
 
-<div id="adminMenu" class="menu-item"
+<div class="menu-item" onclick="goToPage('html/emergency.html')">
+<i class="fa-solid fa-phone"></i>
+Emergency
+</div>
+
+<div class="menu-item" onclick="goToPage('html/settings.html')">
+<i class="fa-solid fa-gear"></i>
+Settings
+</div>
+
+<div class="menu-item" onclick="goToPage('html/about.html')">
+<i class="fa-solid fa-circle-info"></i>
+About App
+</div>
+
+
+<div id="adminMenu"
+class="menu-item"
 onclick="goToPage('html/admin.html')"
 style="display:none">
 
-<i class="fa-solid fa-user-shield"></i> Admin Panel
+<i class="fa-solid fa-user-shield"></i>
+Admin Panel
 
 </div>
 
 </div>
 
-<div class="menu-item logout" onclick="logout()">
-🚪 Logout
-</div>
 
 </nav>
 
@@ -291,12 +480,6 @@ VIRAT <span>7</span>
 <i class="fa-solid fa-wallet"></i>
 <h4>My Dues</h4>
 <p>Check pending dues</p>
-</div>
-
-<div class="card" onclick="goToPage('html/bills.html')">
-<i class="fa-solid fa-file-invoice"></i>
-<h4>Monthly Bills</h4>
-<p>Maintenance & utilities</p>
 </div>
 
 <div class="card" onclick="goToPage('html/notices.html')">
@@ -344,13 +527,26 @@ const sideMenu=document.getElementById("sideMenu")
 const overlay=document.getElementById("menuOverlay")
 
 function toggleMenu(){
-sideMenu.classList.toggle("show")
-overlay.classList.toggle("show")
+
+sideMenu.classList.toggle("show");
+
+overlay.classList.toggle("show");
+
+document.body.style.overflow =
+sideMenu.classList.contains("show")
+? "hidden"
+: "auto";
+
 }
 
 overlay.onclick=()=>{
-sideMenu.classList.remove("show")
-overlay.classList.remove("show")
+
+sideMenu.classList.remove("show");
+
+overlay.classList.remove("show");
+
+document.body.style.overflow="auto";
+
 }
 
 function goToPage(page){
@@ -414,6 +610,8 @@ document.getElementById("userName").innerText=data.name
 document.getElementById("userFlat").innerText="Flat "+data.flat
 
 document.getElementById("drawerName").innerText=data.name
+document.getElementById("menuAvatar").innerText =
+data.name[0].toUpperCase()
 document.getElementById("drawerFlat").innerText="Flat "+data.flat
 
 document.getElementById("headerAvatar").innerText=data.name[0].toUpperCase()
