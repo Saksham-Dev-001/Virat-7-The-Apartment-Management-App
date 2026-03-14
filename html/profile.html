@@ -20,204 +20,221 @@ background:#f4f6fb;
 font-family:Poppins,sans-serif;
 }
 
-/* ---------- TOP HEADER SPACE ---------- */
-
 main{
 padding:16px;
 }
 
-/* ---------- PROFILE CARD ---------- */
-
 .profile-card{
-
 background:#fff;
 border-radius:18px;
 overflow:hidden;
 max-width:420px;
 margin:auto;
-
 box-shadow:0 15px 35px rgba(0,0,0,.08);
-
 }
 
-
-/* ---------- TOP GRADIENT ---------- */
-
 .profile-top{
-
 background:linear-gradient(135deg,#5a67d8,#667eea);
 color:#fff;
 padding:30px 20px 40px;
 text-align:center;
 position:relative;
-
 }
 
 .avatar{
-
 width:95px;
 height:95px;
 border-radius:50%;
-
 background:#fff;
 color:#5a67d8;
-
 font-size:36px;
 font-weight:700;
-
 display:flex;
 align-items:center;
 justify-content:center;
-
 margin:auto;
 margin-bottom:10px;
-
 box-shadow:0 8px 20px rgba(0,0,0,.2);
-
 }
 
 .user-name{
-
 font-size:20px;
 font-weight:600;
-
 }
 
 .role-badge{
-
 display:inline-block;
 margin-top:6px;
 font-size:12px;
-
 background:rgba(255,255,255,.2);
 padding:4px 10px;
 border-radius:20px;
-
 }
 
-
-/* ---------- EDIT BTN ---------- */
-
 .edit-btn{
-
 position:absolute;
 top:12px;
 right:12px;
-
 background:#fff;
 color:#5a67d8;
-
 border:none;
 border-radius:10px;
-
 padding:6px 10px;
 font-size:13px;
 cursor:pointer;
-
 box-shadow:0 4px 10px rgba(0,0,0,.2);
-
 }
 
-
-/* ---------- INFO ---------- */
-
 .profile-info{
-
 padding:18px;
-
 }
 
 .info-row{
-
 display:flex;
 justify-content:space-between;
 align-items:center;
-
 padding:12px 0;
-
 border-bottom:1px solid #eee;
-
 font-size:14px;
-
 }
 
 .info-left{
-
 display:flex;
 gap:10px;
 align-items:center;
-
 color:#555;
-
 }
 
 .info-right{
-
 font-weight:500;
-
 }
 
-
-/* ---------- ACTION BUTTONS ---------- */
-
 .action-row{
-
 display:flex;
 gap:10px;
 margin-top:12px;
-
 }
 
 .small-btn{
-
 flex:1;
-
 border:none;
 padding:8px;
 border-radius:10px;
-
 font-size:13px;
 cursor:pointer;
-
 }
 
 .copy-btn{
-
 background:#edf2ff;
 color:#5a67d8;
-
 }
 
 .call-btn{
-
 background:#e6fffa;
 color:#0d9488;
-
 }
 
-
-/* ---------- LOGOUT ---------- */
-
 .logout-btn{
-
 margin:16px;
-
 width:calc(100% - 32px);
-
 padding:14px;
-
 background:linear-gradient(135deg,#ff4d4d,#ff6b6b);
-
 border:none;
 border-radius:14px;
-
 color:#fff;
 font-size:15px;
 font-weight:600;
-
 cursor:pointer;
-
 box-shadow:0 8px 20px rgba(255,0,0,.25);
+}
+
+
+
+.popup{
+
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+
+background:rgba(0,0,0,.45);
+
+display:none;
+
+align-items:center;
+justify-content:center;
+
+z-index:9999;
+
+}
+
+.popup.show{
+
+display:flex;
+
+}
+
+.popup-box{
+
+background:#fff;
+padding:20px;
+
+border-radius:16px;
+
+width:85%;
+max-width:320px;
+
+text-align:center;
+
+box-shadow:0 15px 40px rgba(0,0,0,.25);
+
+animation:pop .2s ease;
+
+}
+
+@keyframes pop{
+
+from{
+transform:scale(.8);
+opacity:0;
+}
+
+to{
+transform:scale(1);
+opacity:1;
+}
+
+}
+
+.popup-row{
+
+display:flex;
+gap:10px;
+margin-top:15px;
+
+}
+
+.cancel-btn{
+
+flex:1;
+padding:10px;
+border:none;
+border-radius:10px;
+
+background:#e2e8f0;
+
+}
+
+.logout-btn2{
+
+flex:1;
+padding:10px;
+border:none;
+border-radius:10px;
+
+background:linear-gradient(135deg,#ff4d4d,#ff6b6b);
+color:#fff;
 
 }
 
@@ -242,11 +259,8 @@ box-shadow:0 8px 20px rgba(255,0,0,.25);
 
 <main>
 
-
 <div class="profile-card">
 
-
-<!-- TOP -->
 
 <div class="profile-top">
 
@@ -263,44 +277,59 @@ box-shadow:0 8px 20px rgba(255,0,0,.25);
 </div>
 
 
-<!-- INFO -->
-
 <div class="profile-info">
 
 
 <div class="info-row">
-
 <div class="info-left">
 <i class="fa-solid fa-envelope"></i>
 Email
 </div>
-
 <div id="pEmail" class="info-right"></div>
-
 </div>
 
 
 <div class="info-row">
-
 <div class="info-left">
 <i class="fa-solid fa-building"></i>
 Flat
 </div>
-
 <div id="pFlat" class="info-right"></div>
-
 </div>
 
 
 <div class="info-row">
-
 <div class="info-left">
 <i class="fa-solid fa-phone"></i>
 Phone
 </div>
-
 <div id="pPhone" class="info-right"></div>
+</div>
 
+
+<div class="info-row">
+<div class="info-left">
+<i class="fa-solid fa-user-tag"></i>
+Role
+</div>
+<div id="pRole2" class="info-right"></div>
+</div>
+
+
+<div class="info-row">
+<div class="info-left">
+<i class="fa-solid fa-id-card"></i>
+User ID
+</div>
+<div id="pUid" class="info-right"></div>
+</div>
+
+<div class="info-row">
+<div class="info-left">
+<i class="fa-solid fa-city"></i>
+Society
+</div>
+<div class="info-right">VIRAT-7</div>
 </div>
 
 
@@ -316,7 +345,6 @@ Call
 
 </div>
 
-
 </div>
 
 
@@ -324,65 +352,102 @@ Call
 🚪 Logout
 </button>
 
-
 </div>
-
 
 </main>
 
+<!-- LOGOUT POPUP -->
 
+<div id="logoutPopup" class="popup">
+
+<div class="popup-box">
+
+<h3>Logout ?</h3>
+
+<p>Are you sure you want to logout</p>
+
+<div class="popup-row">
+
+<button onclick="closePopup()" class="cancel-btn">
+Cancel
+</button>
+
+<button onclick="confirmLogout()" class="logout-btn2">
+Logout
+</button>
+
+</div>
+
+</div>
+
+</div>
 
 <script type="module">
 
 import { loadUserData } from "../js/user-data.js";
 import { logoutUser } from "../js/auth.js";
 
-document.getElementById("logoutBtn").onclick = logoutUser;
+const logoutBtn = document.getElementById("logoutBtn");
+const popup = document.getElementById("logoutPopup");
 
-document.getElementById("backBtn").onclick = ()=>{
-window.location.href="../dashboard.html";
+logoutBtn.onclick = () => {
+  popup.classList.add("show");
 };
 
+document.getElementById("backBtn").onclick = () => {
+  window.location.href = "../dashboard.html";
+};
 
 let phone = "";
 let email = "";
 
 
-loadUserData((user)=>{
+/* LOAD USER */
 
-document.getElementById("userName").innerText=user.name;
-document.getElementById("pEmail").innerText=user.email;
-document.getElementById("pFlat").innerText=user.flat;
-document.getElementById("pPhone").innerText=user.phone;
-document.getElementById("pRole").innerText=user.role;
+loadUserData((user) => {
 
-document.getElementById("avatar").innerText =
-user.name[0].toUpperCase();
+  document.getElementById("userName").innerText = user.name;
+  document.getElementById("pEmail").innerText = user.email;
+  document.getElementById("pFlat").innerText = user.flat || "-";
+  document.getElementById("pPhone").innerText = user.phone || "-";
 
-phone = user.phone;
-email = user.email;
+  document.getElementById("pRole").innerText = user.role;
+  document.getElementById("pRole2").innerText = user.role;
+
+  document.getElementById("pUid").innerText = user.uid || "-";
+
+  document.getElementById("avatar").innerText =
+    user.name[0].toUpperCase();
+
+  phone = user.phone;
+  email = user.email;
 
 });
 
 
-/* COPY EMAIL */
+/* COPY */
 
-document.getElementById("copyEmail").onclick=()=>{
-
-navigator.clipboard.writeText(email);
-
-alert("Email copied");
-
+document.getElementById("copyEmail").onclick = () => {
+  navigator.clipboard.writeText(email);
+  alert("Email copied");
 };
 
 
 /* CALL */
 
-document.getElementById("callPhone").onclick=()=>{
+document.getElementById("callPhone").onclick = () => {
+  if (phone) location.href = "tel:" + phone;
+};
 
-if(phone)
-location.href="tel:"+phone;
 
+/* POPUP */
+
+window.closePopup = () => {
+  popup.classList.remove("show");
+};
+
+window.confirmLogout = () => {
+  logoutUser();
 };
 
 </script>

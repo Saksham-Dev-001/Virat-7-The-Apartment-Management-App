@@ -50,7 +50,6 @@ async function ensureUserDoc(user) {
 
 /* =====================================
    AUTH STATE LISTENER
-   (Runs automatically when user logs in)
 ===================================== */
 
 onAuthStateChanged(auth, async (user) => {
@@ -74,7 +73,7 @@ export async function googleLogin() {
 
     await signInWithPopup(auth, provider);
 
-    window.location.href = "dashboard.html";
+    window.location.replace("/dashboard.html");
 
   } catch (error) {
 
@@ -96,7 +95,7 @@ export async function emailLogin(email, password) {
 
     await signInWithEmailAndPassword(auth, email, password);
 
-    window.location.href = "dashboard.html";
+    window.location.replace("/dashboard.html");
 
   } catch (error) {
 
@@ -109,7 +108,7 @@ export async function emailLogin(email, password) {
 
 
 /* =====================================
-   LOGOUT
+   LOGOUT  ✅ FIXED
 ===================================== */
 
 export async function logoutUser() {
@@ -118,7 +117,7 @@ export async function logoutUser() {
 
     await signOut(auth);
 
-    window.location.replace("login.html");
+    window.location.replace("/login.html");
 
   } catch (error) {
 
@@ -140,7 +139,7 @@ export function protectPage() {
 
     if (!user) {
 
-      window.location.replace("login.html");
+      window.location.replace("/login.html");
 
     }
 
@@ -159,7 +158,7 @@ export function redirectIfLoggedIn() {
 
     if (user) {
 
-      window.location.replace("dashboard.html");
+      window.location.replace("/dashboard.html");
 
     }
 
