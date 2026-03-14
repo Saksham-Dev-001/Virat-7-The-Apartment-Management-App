@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Privacy Policy | VIRAT-7</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+rel="stylesheet"/>
+
+<link rel="stylesheet" href="../css/header.css">
+
+
+<style>
+
+body{
+margin:0;
+font-family:Poppins,sans-serif;
+background:#f4f6fb;
+opacity:0;
+transition:.3s;
+}
+
+
+/* MAIN */
+
+main{
+padding:16px;
+}
+
+
+/* TOP CARD */
+
+.top{
+
+background:linear-gradient(
+135deg,
+#5a67d8,
+#7c8cff
+);
+
+border-radius:20px;
+padding:20px;
+color:#fff;
+text-align:center;
+margin-bottom:16px;
+
+box-shadow:0 10px 20px rgba(0,0,0,.15);
+
+position:relative;
+overflow:hidden;
+
+animation:fade .4s ease;
+
+}
+
+
+/* shine */
+
+.top::after{
+
+content:"";
+position:absolute;
+
+width:200%;
+height:100%;
+
+background:linear-gradient(
+120deg,
+transparent,
+rgba(255,255,255,.4),
+transparent
+);
+
+top:0;
+left:-100%;
+
+animation:shine 4s infinite;
+
+}
+
+@keyframes shine{
+
+0%{left:-100%}
+50%{left:100%}
+100%{left:100%}
+
+}
+
+
+/* LOGO */
+
+.logo{
+
+width:80px;
+height:80px;
+border-radius:50%;
+background:#fff;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+margin:auto;
+margin-bottom:10px;
+
+overflow:hidden;
+
+animation:pop .4s ease,
+glow 3s infinite;
+
+}
+
+.logo img{
+
+width:100%;
+height:100%;
+object-fit:cover;
+
+}
+
+
+/* TEXT */
+
+.top-title{
+font-size:18px;
+font-weight:600;
+}
+
+.top-sub{
+font-size:12px;
+opacity:.9;
+}
+
+
+/* CARD */
+
+.card{
+
+background:#fff;
+border-radius:16px;
+padding:16px;
+margin-bottom:14px;
+
+box-shadow:
+0 6px 14px rgba(0,0,0,.08);
+
+animation:fade .4s ease;
+
+transition:.2s;
+
+}
+
+.card:active{
+transform:scale(.97);
+}
+
+.title{
+font-weight:600;
+margin-bottom:6px;
+}
+
+.text{
+font-size:13px;
+line-height:1.6;
+color:#555;
+}
+
+
+/* FOOTER */
+
+.footer{
+
+text-align:center;
+font-size:12px;
+color:#777;
+margin-top:12px;
+
+}
+
+
+/* ANIM */
+
+@keyframes fade{
+
+from{
+opacity:0;
+transform:translateY(10px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+@keyframes pop{
+
+from{
+transform:scale(.9);
+opacity:0;
+}
+
+to{
+transform:scale(1);
+opacity:1;
+}
+
+}
+
+@keyframes glow{
+
+0%{box-shadow:0 0 0 rgba(255,255,255,0)}
+50%{box-shadow:0 0 20px rgba(255,255,255,.6)}
+100%{box-shadow:0 0 0 rgba(255,255,255,0)}
+
+}
+
+</style>
+
+</head>
+<body>
+
+
+
+<!-- ✅ SAME HEADER AS SETTINGS / ABOUT -->
+
+<header class="app-header">
+
+<button class="back-btn"
+onclick="goBack()">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+</button>
+
+<h3 class="page-title">
+Privacy Policy
+</h3>
+
+<div class="header-spacer"></div>
+
+</header>
+
+
+
+<main>
+
+
+<div class="top">
+
+<div class="logo">
+<img src="../assets/logo.png">
+</div>
+
+<div class="top-title">
+VIRAT-7 Privacy Policy
+</div>
+
+<div class="top-sub">
+Apartment Management System • v1.0
+</div>
+
+</div>
+
+
+
+<div class="card">
+
+<div class="title">
+Information Collection
+</div>
+
+<div class="text">
+
+We collect basic user data
+like name, flat number,
+email and phone for society
+management purposes.
+
+</div>
+
+</div>
+
+
+
+<div class="card">
+
+<div class="title">
+How Data is Used
+</div>
+
+<div class="text">
+
+Data is used for:
+
+Maintenance  
+Complaints  
+Payments  
+Notice board  
+User identification  
+
+Data is not shared outside society.
+
+</div>
+
+</div>
+
+
+
+<div class="card">
+
+<div class="title">
+Security
+</div>
+
+<div class="text">
+
+We use Firebase Authentication,
+Firestore security rules,
+and secure login system.
+
+Your data is protected.
+
+</div>
+
+</div>
+
+
+
+<div class="card">
+
+<div class="title">
+Admin Access
+</div>
+
+<div class="text">
+
+Admin can manage users,
+dues, complaints and notices.
+
+Admin cannot see passwords.
+
+</div>
+
+</div>
+
+
+
+<div class="card">
+
+<div class="title">
+User Responsibility
+</div>
+
+<div class="text">
+
+Do not share login details.
+
+Keep your account safe.
+
+Misuse may lead to restriction.
+
+</div>
+
+</div>
+
+
+
+<div class="card">
+
+<div class="title">
+Developer
+</div>
+
+<div class="text">
+
+Developed by  
+Saksham Sharma  
+
+VIRAT-7 Apartment System
+
+</div>
+
+</div>
+
+
+
+<div class="footer">
+
+© 2026 VIRAT-7  
+All Rights Reserved
+
+</div>
+
+
+</main>
+
+
+
+<script>
+
+window.onload=()=>{
+document.body.style.opacity=1
+}
+
+function goBack(){
+
+document.body.style.opacity=0
+
+setTimeout(()=>{
+history.back()
+},200)
+
+}
+
+</script>
+
+
+</body>
+</html>

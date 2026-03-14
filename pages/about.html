@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>About | VIRAT-7</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+rel="stylesheet"/>
+
+<!-- IMPORTANT -->
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/header.css">
+
+<style>
+
+body{
+margin:0;
+font-family:Poppins,sans-serif;
+background:#f4f6fb;
+opacity:0;
+transition:.3s;
+}
+
+main{
+padding:16px;
+}
+
+
+/* ===== TOP CARD ===== */
+
+.top{
+
+background:linear-gradient(
+135deg,
+#5a67d8,
+#7c8cff
+);
+
+border-radius:20px;
+padding:20px;
+color:#fff;
+text-align:center;
+margin-bottom:16px;
+
+box-shadow:0 10px 20px rgba(0,0,0,.15);
+
+position:relative;
+overflow:hidden;
+
+animation:fadeIn .4s ease;
+
+}
+
+.top::after{
+
+content:"";
+position:absolute;
+
+width:200%;
+height:100%;
+
+background:linear-gradient(
+120deg,
+transparent,
+rgba(255,255,255,.4),
+transparent
+);
+
+top:0;
+left:-100%;
+
+animation:shine 4s infinite;
+
+}
+
+@keyframes shine{
+0%{left:-100%}
+50%{left:100%}
+100%{left:100%}
+}
+
+
+/* LOGO */
+
+.logo{
+
+width:80px;
+height:80px;
+border-radius:50%;
+background:#fff;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+margin:auto;
+margin-bottom:10px;
+
+overflow:hidden;
+
+animation:pop .4s ease,
+glow 3s infinite;
+
+}
+
+.logo img{
+
+width:100%;
+height:100%;
+object-fit:cover;
+
+}
+
+.app-name{
+font-size:18px;
+font-weight:600;
+}
+
+.version{
+font-size:12px;
+opacity:.9;
+}
+
+
+/* ===== CARD ===== */
+
+.card{
+
+background:#fff;
+border-radius:16px;
+padding:14px;
+margin-bottom:12px;
+
+box-shadow:0 6px 14px rgba(0,0,0,.08);
+
+display:flex;
+align-items:center;
+gap:12px;
+
+animation:fadeIn .5s ease;
+transition:.2s;
+
+}
+
+.card:active{
+transform:scale(.97);
+}
+
+.icon{
+width:34px;
+text-align:center;
+color:#5a67d8;
+font-size:18px;
+}
+
+.text{
+flex:1;
+}
+
+.title{
+font-size:14px;
+font-weight:600;
+}
+
+.value{
+font-size:13px;
+color:#555;
+}
+
+
+/* ===== BLOCK ===== */
+
+.block{
+
+background:#fff;
+border-radius:16px;
+padding:16px;
+margin-bottom:14px;
+
+box-shadow:0 6px 14px rgba(0,0,0,.08);
+
+animation:fadeIn .6s ease;
+transition:.2s;
+
+}
+
+.block:active{
+transform:scale(.97);
+}
+
+.block-title{
+font-weight:600;
+margin-bottom:10px;
+}
+
+
+/* TAGS */
+
+.tags{
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+}
+
+.tag{
+
+background:#eef1ff;
+color:#5a67d8;
+padding:6px 10px;
+border-radius:20px;
+font-size:12px;
+transition:.2s;
+
+}
+
+.tag:hover{
+transform:scale(1.1);
+background:#5a67d8;
+color:#fff;
+}
+
+
+/* TEXT */
+
+.block-text{
+font-size:13px;
+line-height:1.6;
+color:#555;
+}
+
+
+/* FOOTER */
+
+.footer{
+text-align:center;
+font-size:12px;
+color:#777;
+margin-top:14px;
+}
+
+
+/* ANIMATIONS */
+
+@keyframes fadeIn{
+
+from{
+opacity:0;
+transform:translateY(10px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+@keyframes pop{
+
+from{
+transform:scale(.9);
+opacity:0;
+}
+
+to{
+transform:scale(1);
+opacity:1;
+}
+
+}
+
+@keyframes glow{
+
+0%{box-shadow:0 0 0 rgba(255,255,255,0)}
+50%{box-shadow:0 0 20px rgba(255,255,255,.6)}
+100%{box-shadow:0 0 0 rgba(255,255,255,0)}
+
+}
+
+</style>
+
+</head>
+<body>
+
+
+<!-- ✅ NEW HEADER -->
+
+<header class="app-header">
+
+<button class="back-btn" onclick="goBack()">
+<i class="fa-solid fa-arrow-left"></i>
+</button>
+
+<h3 class="page-title">About App</h3>
+
+<div class="header-spacer"></div>
+
+</header>
+
+
+
+<main>
+
+
+<!-- TOP -->
+
+<div class="top">
+
+<div class="logo">
+<img src="../assets/logo.png">
+</div>
+
+<div class="app-name">
+VIRAT-7
+</div>
+
+<div class="version">
+Apartment Management System • v1.0.0
+</div>
+
+</div>
+
+
+
+<!-- DEV -->
+
+<div class="card">
+<div class="icon"><i class="fa-solid fa-user"></i></div>
+<div class="text">
+<div class="title">Developer</div>
+<div class="value">Saksham Sharma</div>
+</div>
+</div>
+
+
+<!-- EMAIL -->
+
+<div class="card">
+<div class="icon"><i class="fa-solid fa-envelope"></i></div>
+<div class="text">
+<div class="title">Email</div>
+<div class="value">admin@virat7.com</div>
+</div>
+</div>
+
+
+<!-- PHONE -->
+
+<div class="card">
+<div class="icon"><i class="fa-solid fa-phone"></i></div>
+<div class="text">
+<div class="title">Contact</div>
+<div class="value">+91 93515xxxxx</div>
+</div>
+</div>
+
+
+<!-- WEBSITE -->
+
+<div class="card">
+<div class="icon"><i class="fa-solid fa-globe"></i></div>
+<div class="text">
+<div class="title">Website</div>
+<div class="value">virat7.netlify.app</div>
+</div>
+</div>
+
+
+<!-- FEATURES -->
+
+<div class="block">
+
+<div class="block-title">Features</div>
+
+<div class="tags">
+
+<div class="tag">Notice Board</div>
+<div class="tag">Complaints</div>
+<div class="tag">Payments</div>
+<div class="tag">Dues</div>
+<div class="tag">Admin Panel</div>
+<div class="tag">User Management</div>
+<div class="tag">Emergency</div>
+<div class="tag">Settings</div>
+<div class="tag">Profile</div>
+<div class="tag">Secure Login</div>
+
+</div>
+
+</div>
+
+
+<!-- TECH -->
+
+<div class="block">
+
+<div class="block-title">Technologies</div>
+
+<div class="tags">
+
+<div class="tag">Firebase</div>
+<div class="tag">Firestore</div>
+<div class="tag">Auth</div>
+<div class="tag">HTML5</div>
+<div class="tag">CSS3</div>
+<div class="tag">JavaScript</div>
+<div class="tag">FontAwesome</div>
+
+</div>
+
+</div>
+
+
+<!-- ABOUT -->
+
+<div class="block">
+
+<div class="block-title">About VIRAT-7</div>
+
+<div class="block-text">
+
+VIRAT-7 is a modern apartment management app designed to simplify society operations.
+
+Residents can check dues, notices, complaints and payments.
+
+Admins can manage users, payments, notices and society data securely.
+
+</div>
+
+</div>
+
+
+<!-- PRIVACY -->
+
+<div class="block">
+
+<div class="block-title">Security & Privacy</div>
+
+<div class="block-text">
+
+All data stored securely in Firebase.
+
+Only authorized users can access data.
+
+Admin has full control of system.
+
+</div>
+
+</div>
+
+
+<div class="footer">
+© 2026 VIRAT-7 • All Rights Reserved
+</div>
+
+
+</main>
+
+
+
+<script>
+
+window.onload=()=>{
+document.body.style.opacity=1
+}
+
+function goBack(){
+history.back()
+}
+
+</script>
+
+
+</body>
+</html>

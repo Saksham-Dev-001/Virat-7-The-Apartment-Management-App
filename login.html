@@ -103,7 +103,7 @@ color:#666;
 
 <button id="loginBtn">Login</button>
 
-<button onclick="googleLogin()" class="google-btn">
+<button id="googleBtn" class="google-btn">
 <i class="fa-brands fa-google"></i>
 Continue with Google
 </button>
@@ -115,24 +115,63 @@ Contact admin if you forgot password
 
 </div>
 
+
 <script type="module">
 
+/* IMPORTANT: cache bypass */
 import {
 googleLogin,
 emailLogin,
 redirectIfLoggedIn
-} from "./js/auth.js";
+} from "./js/auth.js?v=2";
 
+
+/* redirect if already logged */
 redirectIfLoggedIn();
 
-window.googleLogin = googleLogin;
 
-document.getElementById("loginBtn").onclick = () => {
+/* GOOGLE LOGIN */
 
-const email = document.getElementById("email").value;
-const password = document.getElementById("password").value;
+document.getElementById("googleBtn").onclick =
+async ()=>{
 
-emailLogin(email,password);
+console.log("Google login clicked");
+
+await googleLogin();
+
+};
+
+
+/* EMAIL LOGIN */
+
+document.getElementById("loginBtn").onclick =
+async ()=>{
+
+const email =
+document.getElementById("email").value.trim();
+
+const password =
+document.getElementById("password").value.trim();
+
+if(!email || !password){
+
+alert("Enter email & password");
+return;
+
+}
+
+/* store password for auth.js */
+sessionStorage.setItem(
+"loginPass",
+password
+);
+
+console.log("Email login start");
+
+await emailLogin(
+email,
+password
+);
 
 };
 

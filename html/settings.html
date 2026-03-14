@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Settings | VIRAT-7</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+rel="stylesheet">
+
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/header.css">
+
+<style>
+
+body{
+background:#f4f6fb;
+font-family:Poppins,sans-serif;
+opacity:0;
+transition:.3s;
+}
+
+main{padding:12px;}
+
+.section{
+font-size:12px;
+color:#666;
+margin:14px 10px 6px;
+font-weight:600;
+}
+
+.card{
+background:#fff;
+border-radius:18px;
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+overflow:hidden;
+}
+
+.row{
+display:flex;
+align-items:center;
+gap:14px;
+padding:14px 16px;
+cursor:pointer;
+position:relative;
+}
+
+.row:not(:last-child){
+border-bottom:1px solid #eee;
+}
+
+.row:hover{background:#f5f7ff;}
+.row:active{transform:scale(.98);}
+
+.icon{
+width:28px;
+text-align:center;
+color:#5a67d8;
+}
+
+.title{flex:1;}
+.right{font-size:12px;color:#777;}
+
+
+/* SWITCH */
+
+.switch{
+width:44px;
+height:24px;
+background:#ddd;
+border-radius:20px;
+position:relative;
+}
+
+.switch::after{
+content:"";
+width:20px;
+height:20px;
+background:#fff;
+border-radius:50%;
+position:absolute;
+top:2px;
+left:2px;
+transition:.2s;
+}
+
+.switch.active{background:#5a67d8;}
+.switch.active::after{left:22px;}
+
+
+/* LOGOUT */
+
+.logout-btn{
+background:linear-gradient(
+135deg,#111827,#374151,#5a67d8
+);
+color:#fff;
+font-weight:600;
+}
+
+
+/* POPUP */
+
+.popup{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.4);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:9999;
+}
+
+.popup.show{display:flex;}
+
+.popup-box{
+background:#fff;
+border-radius:18px;
+padding:20px;
+width:90%;
+max-width:320px;
+text-align:center;
+box-shadow:0 20px 40px rgba(0,0,0,.3);
+}
+
+.popup-title{
+font-size:16px;
+font-weight:600;
+margin-bottom:6px;
+}
+
+.popup-text{
+font-size:13px;
+color:#555;
+}
+
+.popup-actions{
+display:flex;
+gap:10px;
+margin-top:14px;
+}
+
+.popup-actions button{
+flex:1;
+border:none;
+padding:10px;
+border-radius:10px;
+}
+
+.btn-ok{
+background:#5a67d8;
+color:#fff;
+}
+
+.version{
+text-align:center;
+margin-top:16px;
+font-size:12px;
+color:#777;
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="app-header">
+
+<button class="back-btn" onclick="goBack()">
+<i class="fa-solid fa-arrow-left"></i>
+</button>
+
+<h3 class="page-title">Settings</h3>
+
+<div class="header-spacer"></div>
+
+</header>
+
+<main>
+
+
+<!-- ACCOUNT -->
+
+<div class="section">Account</div>
+
+<div class="card">
+
+<div class="row">
+<div class="icon"><i class="fa-solid fa-user"></i></div>
+<div id="userName" class="title">User</div>
+<div id="userFlat" class="right">Flat</div>
+</div>
+
+<div class="row" onclick="changePassword()">
+<div class="icon"><i class="fa-solid fa-lock"></i></div>
+<div class="title">Change Password</div>
+</div>
+
+<div class="row">
+<div class="icon"><i class="fa-solid fa-id-card"></i></div>
+<div class="title">User ID</div>
+<div id="uid" class="right">-</div>
+</div>
+
+</div>
+
+
+<!-- SECURITY -->
+
+<div class="section">Security</div>
+
+<div class="card">
+
+<div class="row">
+<div class="icon"><i class="fa-solid fa-shield"></i></div>
+<div class="title">Account Status</div>
+<div class="right">Secure</div>
+</div>
+
+<div class="row">
+<div class="icon"><i class="fa-solid fa-database"></i></div>
+<div class="title">Database</div>
+<div class="right">Firestore</div>
+</div>
+
+<div class="row">
+<div class="icon"><i class="fa-solid fa-clock"></i></div>
+<div class="title">Last Login</div>
+<div id="lastLogin" class="right">-</div>
+</div>
+
+</div>
+
+
+<!-- NOTIFICATIONS -->
+
+<div class="section">Notifications</div>
+
+<div class="card">
+
+<div class="row" onclick="toggle('n1')">
+<div class="icon"><i class="fa-solid fa-bell"></i></div>
+<div class="title">Notice Alerts</div>
+<div id="n1" class="switch"></div>
+</div>
+
+<div class="row" onclick="toggle('n2')">
+<div class="icon"><i class="fa-solid fa-money-bill"></i></div>
+<div class="title">Payment Alerts</div>
+<div id="n2" class="switch"></div>
+</div>
+
+</div>
+
+
+<!-- SUPPORT -->
+
+<div class="section">Support</div>
+
+<div class="card">
+
+<div class="row" onclick="contactAdmin()">
+<div class="icon"><i class="fa-solid fa-phone"></i></div>
+<div class="title">Contact Admin</div>
+</div>
+
+<div class="row" onclick="reportProblem()">
+<div class="icon"><i class="fa-solid fa-bug"></i></div>
+<div class="title">Report Problem</div>
+</div>
+
+<div class="row" onclick="location.href='../pages/about.html'">
+<div class="icon"><i class="fa-solid fa-circle-info"></i></div>
+<div class="title">About App</div>
+</div>
+
+<div class="row" onclick="location.href='../pages/privacy.html'">
+<div class="icon"><i class="fa-solid fa-shield-halved"></i></div>
+<div class="title">Privacy Policy</div>
+</div>
+
+</div>
+
+
+<!-- LOGOUT -->
+
+<div class="section">Account</div>
+
+<div class="card">
+
+<div class="row logout-btn" onclick="confirmLogout()">
+<div class="icon">
+<i class="fa-solid fa-right-from-bracket"></i>
+</div>
+<div class="title">Logout</div>
+</div>
+
+</div>
+
+
+<div class="version">
+VIRAT-7 v1.0
+</div>
+
+</main>
+
+
+
+<!-- POPUP -->
+
+<div id="popup" class="popup">
+
+<div class="popup-box">
+
+<div id="popupTitle" class="popup-title"></div>
+<div id="popupText" class="popup-text"></div>
+
+<div class="popup-actions">
+
+<button onclick="closePopup()">Cancel</button>
+<button id="popupOk" class="btn-ok">OK</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script type="module">
+
+import { loadUserData } from "../js/user-data.js";
+import { logoutUser } from "../js/auth.js";
+
+window.onload=()=>{
+document.body.style.opacity=1
+
+const now=new Date()
+
+lastLogin.innerText=
+now.toLocaleDateString()+" "+
+now.toLocaleTimeString()
+}
+
+window.goBack=()=>{
+location.href="../dashboard.html"
+}
+
+
+/* SWITCH */
+
+window.toggle=id=>{
+const el=document.getElementById(id)
+el.classList.toggle("active")
+}
+
+
+/* POPUP */
+
+function showPopup(t,m){
+
+popupTitle.innerHTML=t
+popupText.innerHTML=m
+popupOk.onclick=closePopup
+popup.classList.add("show")
+
+}
+
+window.closePopup=()=>{
+popup.classList.remove("show")
+}
+
+
+/* PASSWORD */
+
+window.changePassword=()=>{
+
+showPopup(
+"🔒 Password Protected",
+"Only admin can change password.<br>Contact administrator."
+)
+
+}
+
+
+/* CONTACT */
+
+window.contactAdmin=()=>{
+
+showPopup(
+"Admin Contact",
+"+91 XXXXX"
+)
+
+}
+
+
+/* REPORT */
+
+window.reportProblem=()=>{
+
+showPopup(
+"Report",
+"Feature coming soon"
+)
+
+}
+
+
+/* LOGOUT */
+
+window.confirmLogout=()=>{
+
+popupTitle.innerText="Logout"
+popupText.innerText="Logout from VIRAT-7?"
+
+popupOk.onclick=logoutUser
+
+popup.classList.add("show")
+
+}
+
+
+/* USER DATA */
+
+loadUserData(u=>{
+
+uid.innerText=u.uid||"-"
+userName.innerText=u.name||"User"
+userFlat.innerText=u.flat?"Flat "+u.flat:"-"
+
+})
+
+</script>
+
+</body>
+</html>
