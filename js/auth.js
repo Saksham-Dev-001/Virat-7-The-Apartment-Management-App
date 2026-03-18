@@ -3,256 +3,361 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  updatePassword,
-  EmailAuthProvider,
-  reauthenticateWithCredential
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+GoogleAuthProvider,
+signInWithPopup,
+signInWithEmailAndPassword,
+signOut,
+onAuthStateChanged,
+updatePassword,
+EmailAuthProvider,
+reauthenticateWithCredential
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
-  doc,
-  getDoc,
-  setDoc,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+doc,
+getDoc,
+setDoc,
+serverTimestamp
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+/* ===========================
+PROVIDER
+=========================== */
 
 const provider = new GoogleAuthProvider();
 
 
 
 /* ===========================
-   ENSURE USER DOC
+SESSION ID
 =========================== */
 
-async function ensureUserDoc(user) {
+function createSessionId() {
 
-  const ref = doc(db, "users", user.uid);
-  const snap = await getDoc(ref);
-
-  if (!snap.exists()) {
-
-    await setDoc(ref, {
-      name: user.displayName || user.email.split("@")[0],
-      email: user.email,
-      flat: "",
-      phone: "",
-      role: "resident",
-      status: "active",
-      password: "",
-      createdAt: serverTimestamp()
-    });
-
-  }
+return Date.now() + "_" +
+Math.random().toString(36).slice(2);
 
 }
 
 
 
 /* ===========================
-   AUTH LISTENER
+CACHE USER (instant UI)
+=========================== */
+
+function saveUserCache(user, extra = {}) {
+
+const cache = {
+
+name:
+user.displayName ||
+user.email.split("@")[0],
+
+email: user.email,
+
+flat: extra.flat || "-",
+
+phone: extra.phone || "-",
+
+role: extra.role || "resident",
+
+uid: user.uid
+
+};
+
+localStorage.setItem(
+"userCache",
+JSON.stringify(cache)
+);
+
+}
+
+
+
+/* ===========================
+ENSURE USER DOC
+=========================== */
+
+async function ensureUserDoc(user) {
+
+const ref = doc(db, "users", user.uid);
+
+const snap = await getDoc(ref);
+
+if (!snap.exists()) {
+
+await setDoc(ref, {
+
+name:
+user.displayName ||
+user.email.split("@")[0],
+
+email: user.email,
+
+flat: "",
+
+phone: "",
+
+role: "resident",
+
+status: "active",
+
+password: "",
+
+sessionId: createSessionId(),
+
+createdAt: serverTimestamp()
+
+});
+
+} else {
+
+await setDoc(
+ref,
+{
+sessionId: createSessionId()
+},
+{ merge: true }
+);
+
+}
+
+}
+
+
+
+/* ===========================
+GLOBAL AUTH LISTENER
 =========================== */
 
 onAuthStateChanged(auth, async (user) => {
 
-  if (!user) return;
+if (!user) return;
 
-  await ensureUserDoc(user);
+try {
 
-  const pass =
-    sessionStorage.getItem("loginPass");
+await ensureUserDoc(user);
 
-  if (pass) {
+saveUserCache(user);
 
-    await setDoc(
-      doc(db, "users", user.uid),
-      { password: pass },
-      { merge: true }
-    );
+const pass =
+sessionStorage.getItem("loginPass");
 
-    sessionStorage.removeItem("loginPass");
+if (pass) {
 
-  }
+await setDoc(
+doc(db, "users", user.uid),
+{ password: pass },
+{ merge: true }
+);
+
+sessionStorage.removeItem("loginPass");
+
+}
+
+} catch (e) {
+
+console.log("Auth listener error:", e);
+
+}
 
 });
 
 
 
 /* ===========================
-   GOOGLE LOGIN
+GOOGLE LOGIN
 =========================== */
 
 export async function googleLogin() {
 
-  try {
+try {
 
-    const cred =
-      await signInWithPopup(
-        auth,
-        provider
-      );
+const cred =
+await signInWithPopup(
+auth,
+provider
+);
 
-    const user = cred.user;
+await ensureUserDoc(cred.user);
 
-    await ensureUserDoc(user);
+saveUserCache(cred.user);
 
-    window.location.href =
-      "../dashboard.html";
+location.replace("../dashboard.html");
 
-  } catch (e) {
+} catch (e) {
 
-    console.error(e);
-    alert(e.message);
+console.error(e);
+alert(e.message);
 
-  }
+}
 
 }
 
 
 
 /* ===========================
-   EMAIL LOGIN
+EMAIL LOGIN
 =========================== */
 
 export async function emailLogin(
-  email,
-  password
+email,
+password
 ) {
 
-  try {
+try {
 
-    const cred =
-      await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+const cred =
+await signInWithEmailAndPassword(
+auth,
+email,
+password
+);
 
-    const user = cred.user;
+await ensureUserDoc(cred.user);
 
-    await ensureUserDoc(user);
+await setDoc(
+doc(db, "users", cred.user.uid),
+{ password },
+{ merge: true }
+);
 
-    await setDoc(
-      doc(db, "users", user.uid),
-      { password },
-      { merge: true }
-    );
+saveUserCache(cred.user);
 
-    window.location.href =
-      "../dashboard.html";
+location.replace("../dashboard.html");
 
-  } catch (e) {
+} catch (e) {
 
-    console.error(e);
-    alert(e.message);
+console.error(e);
+alert(e.message);
 
-  }
+}
 
 }
 
 
 
 /* ===========================
-   LOGOUT
+LOGOUT
 =========================== */
 
 export async function logoutUser() {
 
-  try {
+try {
 
-    await signOut(auth);
+localStorage.removeItem("userCache");
 
-    window.location.href =
-      "../login.html";
+await signOut(auth);
 
-  } catch (e) {
+location.replace("../login.html");
 
-    console.log(e);
+} catch (e) {
 
-  }
+console.log(e);
+
+}
 
 }
 
 
 
 /* ===========================
-   CHANGE PASSWORD
+CHANGE PASSWORD
 =========================== */
 
 export async function changeUserPassword(
-  oldPass,
-  newPass
+oldPass,
+newPass
 ) {
 
-  const user = auth.currentUser;
+const user = auth.currentUser;
 
-  if (!user) return;
+if (!user) return;
 
-  const cred =
-    EmailAuthProvider.credential(
-      user.email,
-      oldPass
-    );
+const cred =
+EmailAuthProvider.credential(
+user.email,
+oldPass
+);
 
-  await reauthenticateWithCredential(
-    user,
-    cred
-  );
+await reauthenticateWithCredential(
+user,
+cred
+);
 
-  await updatePassword(
-    user,
-    newPass
-  );
+await updatePassword(
+user,
+newPass);
 
 }
 
 
 
 /* ===========================
-   PAGE PROTECTION
+PROTECT PAGE (stable)
 =========================== */
 
 export function protectPage() {
 
-  onAuthStateChanged(
-    auth,
-    (user) => {
+let checked = false;
 
-      if (!user) {
+const unsub =
+onAuthStateChanged(auth, (user) => {
 
-        window.location.href =
-          "../login.html";
+checked = true;
 
-      }
+unsub();
 
-    }
-  );
+if (!user) {
+
+location.replace("../login.html");
+
+}
+
+});
+
+
+setTimeout(() => {
+
+if (!checked) {
+
+setTimeout(() => {
+
+if (!auth.currentUser) {
+
+location.replace("../login.html");
+
+}
+
+}, 4000);
+
+}
+
+}, 1500);
 
 }
 
 
 
 /* ===========================
-   REDIRECT IF LOGGED IN
+REDIRECT IF LOGGED IN
 =========================== */
 
 export function redirectIfLoggedIn() {
 
-  onAuthStateChanged(
-    auth,
-    (user) => {
+onAuthStateChanged(auth, (user) => {
 
-      if (user) {
+if (user) {
 
-        window.location.href =
-          "../dashboard.html";
+location.replace("../dashboard.html");
 
-      }
+}
 
-    }
-  );
+});
 
 }

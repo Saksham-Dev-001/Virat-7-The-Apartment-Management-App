@@ -3,189 +3,248 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  doc,
-  getDoc,
-  updateDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+doc,
+getDoc,
+updateDoc
+} from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+onAuthStateChanged,
+signOut
+} from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+
+let listenerStarted = false;
+let memoryCache = null;
 
 
 export function loadUserData(callback) {
 
-  onAuthStateChanged(auth, async (user) => {
+if (listenerStarted) return;
+listenerStarted = true;
 
-    if (!user) {
+let authReady = false;
 
-      window.location.href = "login.html";
-      return;
 
-    }
+/* =========================
+1. MEMORY CACHE (fastest)
+========================= */
 
-    const userRef =
-      doc(db, "users", user.uid);
+if (memoryCache && callback) {
+callback(memoryCache);
+}
 
-    const snap =
-      await getDoc(userRef);
 
-    let data = {};
+/* =========================
+2. LOCAL CACHE (instant UI)
+========================= */
 
-    if (snap.exists()) {
+try {
 
-      data = snap.data();
+const cache =
+localStorage.getItem("userCache");
 
-    }
+if (cache) {
 
+const data = JSON.parse(cache);
 
+memoryCache = data;
 
-    /* =========================
-       SESSION CHECK (NEW)
-    ========================= */
+if (callback) callback(data);
 
-    const savedSession =
-      localStorage.getItem(
-        "sessionId"
-      );
+}
 
-    if (
-      data.sessionId &&
-      savedSession &&
-      data.sessionId !== savedSession
-    ) {
+} catch (e) {
+console.log("cache error", e);
+}
 
-      alert(
-        "Logged in from another device"
-      );
 
-      await signOut(auth);
 
-      window.location.href =
-        "login.html";
+/* =========================
+3. AUTH LISTENER (background)
+========================= */
 
-      return;
+onAuthStateChanged(auth, async (user) => {
 
-    }
+authReady = true;
 
+if (!user) {
 
+setTimeout(() => {
 
-    let updateNeeded = false;
+if (!auth.currentUser) {
+location.replace("../login.html");
+}
 
+}, 1200);
 
+return;
 
-    /* =========================
-       UID SAVE
-    ========================= */
+}
 
-    if (!data.uid) {
 
-      data.uid = user.uid;
+try {
 
-      updateNeeded = true;
+const userRef =
+doc(db, "users", user.uid);
 
-    }
+let snap;
 
+try {
 
+snap = await getDoc(userRef);
 
-    /* =========================
-       CREATED DATE FIX
-    ========================= */
+} catch (e) {
 
-    if (
-      !data.createdAt ||
-      isNaN(Number(data.createdAt))
-    ) {
+console.log("getDoc error", e);
+return;
 
-      data.createdAt =
-        Date.now();
+}
 
-      updateNeeded = true;
 
-    }
+let data = {};
 
+if (snap.exists()) {
+data = snap.data();
+}
 
 
-    /* =========================
-       STATUS DEFAULT
-    ========================= */
+/* =========================
+SESSION CHECK
+========================= */
 
-    if (!data.status) {
+try {
 
-      data.status = "active";
+const savedSession =
+localStorage.getItem("sessionId");
 
-      updateNeeded = true;
+if (
+data.sessionId &&
+savedSession &&
+data.sessionId !== savedSession
+) {
 
-    }
+await signOut(auth);
+location.replace("../login.html");
+return;
 
+}
 
+} catch (e) {
+console.log("session check error", e);
+}
 
-    /* =========================
-       UPDATE FIRESTORE
-    ========================= */
 
-    if (updateNeeded) {
+/* =========================
+FIX FIELDS
+========================= */
 
-      await updateDoc(
-        userRef,
-        {
-          uid: data.uid,
-          createdAt:
-            data.createdAt,
-          status:
-            data.status
-        }
-      );
+let updateNeeded = false;
 
-    }
+if (!data.uid) {
+data.uid = user.uid;
+updateNeeded = true;
+}
 
+if (!data.createdAt) {
+data.createdAt = Date.now();
+updateNeeded = true;
+}
 
+if (!data.status) {
+data.status = "active";
+updateNeeded = true;
+}
 
-    /* =========================
-       NAME FIX
-    ========================= */
 
-    const name =
-      data.name ||
-      user.displayName ||
-      user.email.split("@")[0];
+if (updateNeeded) {
 
+try {
 
+await updateDoc(userRef, {
+uid: data.uid,
+createdAt: data.createdAt,
+status: data.status
+});
 
-    /* =========================
-       CALLBACK
-    ========================= */
+} catch (e) {
+console.log("update error", e);
+}
 
-    callback({
+}
 
-      name: name,
 
-      email: user.email,
+/* =========================
+BUILD USER OBJECT
+========================= */
 
-      flat:
-        data.flat || "-",
+const name =
+data.name ||
+user.displayName ||
+(user.email ? user.email.split("@")[0] : "User");
 
-      phone:
-        data.phone || "-",
 
-      role:
-        data.role || "resident",
+const userObj = {
 
-      uid:
-        data.uid,
+name: name,
+email: user.email || "",
+flat: data.flat || "-",
+phone: data.phone || "-",
+role: data.role || "resident",
+uid: data.uid,
+createdAt: Number(data.createdAt) || Date.now(),
+status: data.status || "active"
 
-      createdAt:
-        Number(
-          data.createdAt
-        ),
+};
 
-      status:
-        data.status || "active"
 
-    });
+/* =========================
+SAVE CACHE
+========================= */
 
-  });
+memoryCache = userObj;
+
+try {
+
+localStorage.setItem(
+"userCache",
+JSON.stringify(userObj)
+);
+
+} catch (e) {}
+
+
+
+/* =========================
+UPDATE UI AGAIN (sync)
+========================= */
+
+if (callback) {
+callback(userObj);
+}
+
+
+} catch (err) {
+
+console.log("loadUserData error", err);
+
+}
+
+});
+
+
+/* =========================
+AUTH DEBUG (safe)
+========================= */
+
+setTimeout(() => {
+
+if (!authReady) {
+console.log("Auth slow...");
+}
+
+}, 2000);
 
 }

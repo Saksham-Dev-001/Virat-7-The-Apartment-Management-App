@@ -356,6 +356,27 @@ box-shadow:0 5px 12px rgba(0,0,0,.08);
 background:#ffffff;
 }
 
+/*Install App */
+
+.install-btn{
+margin-top:10px;
+padding:10px 16px;
+border:none;
+border-radius:12px;
+background:linear-gradient(
+135deg,
+#5a67d8,
+#4f46e5
+);
+color:white;
+font-weight:600;
+font-size:14px;
+cursor:pointer;
+}
+
+.install-btn:active{
+transform:scale(.95);
+}
 
 </style>
 </head>
@@ -488,10 +509,11 @@ VIRAT <span>7</span>
 <p>Society updates</p>
 </div>
 
-<div class="card" onclick="goToPage('html/profile.html')">
-<i class="fa-solid fa-user"></i>
-<h4>Profile</h4>
-<p>Your details</p>
+<div class="card"
+onclick="location.href='html/residents.html'">
+<i class="fa-solid fa-users"></i>
+<h3>Residents</h3>
+<p>Directory</p>
 </div>
 
 <div class="card"
@@ -580,10 +602,13 @@ import { logoutUser } from "./js/auth.js";
 
 window.logout = logoutUser;
 
-let userFlat=""
-let userId=""
+let userFlat = ""
+let userId = ""
 
-/* AUTH */
+
+/* =========================
+AUTH
+========================= */
 
 onAuthStateChanged(auth, async (user)=>{
 
@@ -592,66 +617,143 @@ window.location.href="login.html"
 return
 }
 
-userId=user.uid
+userId = user.uid
 
-const snap=await getDoc(doc(db,"users",user.uid))
+try{
+
+const snap =
+await getDoc(
+doc(db,"users",user.uid)
+)
 
 if(!snap.exists()) return
 
-const data=snap.data()
-if(data.role === "admin"){
-document.getElementById("adminMenu").style.display = "flex";
+const data = snap.data()
+
+
+/* admin */
+
+const adminMenu =
+document.getElementById("adminMenu")
+
+if(
+data.role==="admin" &&
+adminMenu
+){
+adminMenu.style.display="flex"
 }
 
 
-userFlat=data.flat
+userFlat = data.flat || ""
 
-document.getElementById("userName").innerText=data.name
-document.getElementById("userFlat").innerText="Flat "+data.flat
 
-document.getElementById("drawerName").innerText=data.name
-document.getElementById("menuAvatar").innerText =
-data.name[0].toUpperCase()
-document.getElementById("drawerFlat").innerText="Flat "+data.flat
+/* UI */
 
-document.getElementById("headerAvatar").innerText=data.name[0].toUpperCase()
+setText("userName", data.name || "User")
+
+setText(
+"userFlat",
+data.flat ? "Flat " + data.flat : "-"
+)
+
+setText(
+"drawerName",
+data.name || "User"
+)
+
+setText(
+"menuAvatar",
+data.name
+? data.name[0].toUpperCase()
+: "U"
+)
+
+setText(
+"drawerFlat",
+data.flat
+? "Flat " + data.flat
+: "-"
+)
+
+setText(
+"headerAvatar",
+data.name
+? data.name[0].toUpperCase()
+: "U"
+)
 
 listenNotifications()
 
+}catch(e){
+
+console.log("Auth load error", e)
+
+}
+
 })
 
-/* NOTIFICATION BELL */
+
+
+/* =========================
+SAFE TEXT
+========================= */
+
+function setText(id, value){
+
+const el =
+document.getElementById(id)
+
+if(el) el.innerText = value
+
+}
+
+
+
+/* =========================
+NOTIFICATION BELL
+========================= */
 
 function listenNotifications(){
 
-const bell=document.getElementById("bellCount")
+const bell =
+document.getElementById("bellCount")
 
-const q=query(collection(db,"notifications"))
+if(!bell) return
+
+const q =
+query(
+collection(db,"notifications")
+)
 
 onSnapshot(q,(snapshot)=>{
 
-let count=0
+let count = 0
 
 snapshot.forEach(docSnap=>{
 
-const n=docSnap.data()
+const n = docSnap.data()
 
-if(n.to!=="all" && n.to!==userFlat) return
+if(
+n.to !== "all" &&
+n.to !== userFlat
+) return
 
-const read=n.readBy?.includes(userId)
+const read =
+n.readBy?.includes(userId)
 
 if(!read) count++
 
 })
 
-if(count>0){
 
-bell.innerText=count
-bell.style.display="block"
+if(count > 0){
+
+bell.innerText = count
+bell.style.display = "block"
 
 }else{
 
-bell.style.display="none"
+bell.style.display = "none"
 
 }
 
@@ -675,6 +777,7 @@ WhatsApp Group:
 <a href="https://whatsapp.com/channel/0029VbBzCYX545uthpIC6N1q"
 target="_blank">Join</a>
 </p>
+
 </div>
 
 <div class="footer-block center">

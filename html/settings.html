@@ -23,56 +23,95 @@ opacity:0;
 transition:.3s;
 }
 
-main{padding:12px;}
+main{
+padding:14px;
+max-width:700px;
+margin:auto;
+}
+
+/* section */
 
 .section{
 font-size:12px;
-color:#666;
-margin:14px 10px 6px;
+color:#6b7280;
+margin:16px 6px 6px;
 font-weight:600;
 }
 
+/* card */
+
 .card{
 background:#fff;
-border-radius:18px;
-box-shadow:0 8px 20px rgba(0,0,0,.08);
+border-radius:20px;
+box-shadow:0 8px 18px rgba(0,0,0,.08);
 overflow:hidden;
+margin-bottom:10px;
+transition:.2s;
 }
+
+.card:hover{
+box-shadow:0 12px 26px rgba(0,0,0,.12);
+}
+
+/* row */
 
 .row{
 display:flex;
 align-items:center;
 gap:14px;
-padding:14px 16px;
+padding:15px 16px;
 cursor:pointer;
-position:relative;
+transition:.15s;
 }
 
 .row:not(:last-child){
-border-bottom:1px solid #eee;
+border-bottom:1px solid #f1f1f1;
 }
 
-.row:hover{background:#f5f7ff;}
-.row:active{transform:scale(.98);}
+.row:hover{
+background:#f7f9ff;
+}
+
+.row:active{
+transform:scale(.98);
+}
+
+/* icon */
 
 .icon{
-width:28px;
-text-align:center;
+width:34px;
+height:34px;
+border-radius:10px;
+background:#eef2ff;
 color:#5a67d8;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:14px;
 }
 
-.title{flex:1;}
-.right{font-size:12px;color:#777;}
+/* text */
 
+.title{
+flex:1;
+font-size:14px;
+font-weight:500;
+}
 
-/* SWITCH */
+.right{
+font-size:12px;
+color:#888;
+}
+
+/* switch */
 
 .switch{
-width:44px;
+width:46px;
 height:24px;
 background:#ddd;
 border-radius:20px;
 position:relative;
+transition:.2s;
 }
 
 .switch::after{
@@ -85,24 +124,31 @@ position:absolute;
 top:2px;
 left:2px;
 transition:.2s;
+box-shadow:0 2px 4px rgba(0,0,0,.2);
 }
 
-.switch.active{background:#5a67d8;}
-.switch.active::after{left:22px;}
+.switch.active{
+background:#5a67d8;
+}
 
+.switch.active::after{
+left:24px;
+}
 
-/* LOGOUT */
+/* logout */
 
 .logout-btn{
 background:linear-gradient(
-135deg,#111827,#374151,#5a67d8
+135deg,
+#111827,
+#374151,
+#5a67d8
 );
-color:#fff;
+color:white;
 font-weight:600;
 }
 
-
-/* POPUP */
+/* popup */
 
 .popup{
 position:fixed;
@@ -112,29 +158,27 @@ display:none;
 align-items:center;
 justify-content:center;
 z-index:9999;
+backdrop-filter:blur(3px);
 }
 
-.popup.show{display:flex;}
+.popup.show{
+display:flex;
+}
 
 .popup-box{
 background:#fff;
 border-radius:18px;
-padding:20px;
+padding:22px;
 width:90%;
 max-width:320px;
 text-align:center;
-box-shadow:0 20px 40px rgba(0,0,0,.3);
+box-shadow:0 20px 40px rgba(0,0,0,.25);
+animation:pop .18s ease;
 }
 
-.popup-title{
-font-size:16px;
-font-weight:600;
-margin-bottom:6px;
-}
-
-.popup-text{
-font-size:13px;
-color:#555;
+@keyframes pop{
+from{transform:scale(.9);opacity:0}
+to{transform:scale(1);opacity:1}
 }
 
 .popup-actions{
@@ -148,18 +192,19 @@ flex:1;
 border:none;
 padding:10px;
 border-radius:10px;
+font-weight:600;
 }
 
 .btn-ok{
 background:#5a67d8;
-color:#fff;
+color:white;
 }
 
 .version{
 text-align:center;
-margin-top:16px;
+margin-top:18px;
 font-size:12px;
-color:#777;
+color:#888;
 }
 
 </style>
@@ -180,7 +225,6 @@ color:#777;
 </header>
 
 <main>
-
 
 <!-- ACCOUNT -->
 
@@ -300,13 +344,9 @@ color:#777;
 
 </div>
 
-
-<div class="version">
-VIRAT-7 v1.0
-</div>
+<div class="version">VIRAT-7 v1.0</div>
 
 </main>
-
 
 
 <!-- POPUP -->
@@ -315,8 +355,8 @@ VIRAT-7 v1.0
 
 <div class="popup-box">
 
-<div id="popupTitle" class="popup-title"></div>
-<div id="popupText" class="popup-text"></div>
+<div id="popupTitle"></div>
+<div id="popupText"></div>
 
 <div class="popup-actions">
 
@@ -332,107 +372,86 @@ VIRAT-7 v1.0
 
 <script type="module">
 
-import { loadUserData } from "../js/user-data.js";
-import { logoutUser } from "../js/auth.js";
+let logoutUser;
+let loadUserData;
 
-window.onload=()=>{
-document.body.style.opacity=1
+async function init(){
 
-const now=new Date()
+try{
+const a = await import("../js/auth.js");
+logoutUser = a.logoutUser;
+}catch(e){}
 
-lastLogin.innerText=
-now.toLocaleDateString()+" "+
-now.toLocaleTimeString()
+try{
+const u = await import("../js/user-data.js");
+loadUserData = u.loadUserData;
+}catch(e){}
+
+document.body.style.opacity = 1;
+
+const now = new Date();
+
+lastLogin.innerText =
+now.toLocaleDateString() +
+" " +
+now.toLocaleTimeString();
+
+if(loadUserData){
+
+loadUserData(user=>{
+
+uid.innerText = user.uid;
+userName.innerText = user.name;
+userFlat.innerText =
+user.flat ? "Flat "+user.flat : "-";
+
+});
+
 }
 
-window.goBack=()=>{
-location.href="../dashboard.html"
 }
 
+init();
 
-/* SWITCH */
+window.goBack = () =>
+location.href="../dashboard.html";
 
-window.toggle=id=>{
-const el=document.getElementById(id)
-el.classList.toggle("active")
-}
-
-
-/* POPUP */
+window.toggle = id =>
+document.getElementById(id).classList.toggle("active");
 
 function showPopup(t,m){
 
-popupTitle.innerHTML=t
-popupText.innerHTML=m
-popupOk.onclick=closePopup
-popup.classList.add("show")
+popupTitle.innerHTML=t;
+popupText.innerHTML=m;
+
+popupOk.onclick=closePopup;
+
+popup.classList.add("show");
 
 }
 
-window.closePopup=()=>{
-popup.classList.remove("show")
-}
+window.closePopup=()=>
+popup.classList.remove("show");
 
+window.changePassword=()=>
+showPopup("Password","Only admin can change password");
 
-/* PASSWORD */
+window.contactAdmin=()=>
+showPopup("Admin","+91 XXXXX");
 
-window.changePassword=()=>{
-
-showPopup(
-"🔒 Password Protected",
-"Only admin can change password.<br>Contact administrator."
-)
-
-}
-
-
-/* CONTACT */
-
-window.contactAdmin=()=>{
-
-showPopup(
-"Admin Contact",
-"+91 XXXXX"
-)
-
-}
-
-
-/* REPORT */
-
-window.reportProblem=()=>{
-
-showPopup(
-"Report",
-"Feature coming soon"
-)
-
-}
-
-
-/* LOGOUT */
+window.reportProblem=()=>
+showPopup("Report","Coming soon");
 
 window.confirmLogout=()=>{
 
-popupTitle.innerText="Logout"
-popupText.innerText="Logout from VIRAT-7?"
+popupTitle.innerText="Logout";
+popupText.innerText="Logout from VIRAT-7?";
 
-popupOk.onclick=logoutUser
+popupOk.onclick=logoutUser;
 
-popup.classList.add("show")
+popup.classList.add("show");
 
-}
-
-
-/* USER DATA */
-
-loadUserData(u=>{
-
-uid.innerText=u.uid||"-"
-userName.innerText=u.name||"User"
-userFlat.innerText=u.flat?"Flat "+u.flat:"-"
-
-})
+};
 
 </script>
 

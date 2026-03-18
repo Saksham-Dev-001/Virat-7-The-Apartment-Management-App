@@ -1,6 +1,6 @@
 // js/notices.js
 
-import { db } from "./firebase.js";
+import { db, auth } from "./firebase.js";
 import { addActivity } from "./activity.js";
 
 import {
@@ -15,7 +15,12 @@ updateDoc,
 onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+import {
+onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
 import { sendNotification } from "./admin.js";
+
 
 
 /* =========================================
@@ -24,54 +29,77 @@ ADMIN POST / UPDATE NOTICE
 
 window.publishNotice = async function () {
 
-const title = document.getElementById("noticeTitle")?.value.trim();
-const message = document.getElementById("noticeMessage")?.value.trim();
+const title =
+document.getElementById("noticeTitle")?.value.trim();
+
+const message =
+document.getElementById("noticeMessage")?.value.trim();
 
 if (!title || !message) {
+
 alert("Please fill all fields");
 return;
+
 }
 
 try {
 
-if(window.editingNotice){
+if (window.editingNotice) {
 
-await updateDoc(doc(db,"notices",window.editingNotice),{
-title:title,
-message:message
-});
+await updateDoc(
+doc(db, "notices", window.editingNotice),
+{
+title: title,
+message: message
+}
+);
 
-window.editingNotice=null;
+window.editingNotice = null;
 
 alert("Notice updated");
 
-}else{
+} else {
 
-await addDoc(collection(db,"notices"),{
-title:title,
-message:message,
-createdAt:serverTimestamp(),
-pinned:false
-});
+await addDoc(
+collection(db, "notices"),
+{
+title: title,
+message: message,
+createdAt: serverTimestamp(),
+pinned: false
+}
+);
 
-try{
-await sendNotification("all","New Notice",title);
-}catch(e){
-console.warn("Push failed:",e);
+try {
+
+await sendNotification(
+"all",
+"New Notice",
+title
+);
+
+} catch (e) {
+
+console.warn("Push failed:", e);
+
 }
 
-addActivity("Notice posted",title,"bullhorn");
+addActivity(
+"Notice posted",
+title,
+"bullhorn"
+);
 
 alert("Notice posted successfully");
 
 }
 
-document.getElementById("noticeTitle").value="";
-document.getElementById("noticeMessage").value="";
+document.getElementById("noticeTitle").value = "";
+document.getElementById("noticeMessage").value = "";
 
-}catch(error){
+} catch (error) {
 
-console.error("Notice Post Error:",error);
+console.error("Notice Post Error:", error);
 alert("Failed to post notice");
 
 }
@@ -84,17 +112,19 @@ alert("Failed to post notice");
 DELETE NOTICE
 ========================================= */
 
-window.deleteNotice = async function(id){
+window.deleteNotice = async function (id) {
 
-if(!confirm("Delete this notice?")) return;
+if (!confirm("Delete this notice?")) return;
 
-try{
+try {
 
-await deleteDoc(doc(db,"notices",id));
+await deleteDoc(
+doc(db, "notices", id)
+);
 
 alert("Notice deleted");
 
-}catch(err){
+} catch (err) {
 
 console.error(err);
 alert("Delete failed");
@@ -109,15 +139,18 @@ alert("Delete failed");
 PIN NOTICE
 ========================================= */
 
-window.pinNotice = async function(id,current){
+window.pinNotice = async function (id, current) {
 
-try{
+try {
 
-await updateDoc(doc(db,"notices",id),{
-pinned:!current
-});
+await updateDoc(
+doc(db, "notices", id),
+{
+pinned: !current
+}
+);
 
-}catch(err){
+} catch (err) {
 
 console.error(err);
 
@@ -131,12 +164,21 @@ console.error(err);
 EDIT NOTICE
 ========================================= */
 
-window.editNotice = function(id,title,message){
+window.editNotice = function (
+id,
+title,
+message
+) {
 
-document.getElementById("noticeTitle").value=title;
-document.getElementById("noticeMessage").value=message;
+document.getElementById(
+"noticeTitle"
+).value = title;
 
-window.editingNotice=id;
+document.getElementById(
+"noticeMessage"
+).value = message;
+
+window.editingNotice = id;
 
 };
 
@@ -146,40 +188,48 @@ window.editingNotice=id;
 LOAD NOTICES (REALTIME)
 ========================================= */
 
-export function loadNotices(){
+export function loadNotices() {
 
-const container=document.getElementById("noticeList");
-
-if(!container) return;
-
-const q=query(
-collection(db,"notices"),
-orderBy("createdAt","desc")
+const container =
+document.getElementById(
+"noticeList"
 );
 
-onSnapshot(q,(snapshot)=>{
+if (!container) return;
 
-container.innerHTML="";
+const q =
+query(
+collection(db, "notices"),
+orderBy("createdAt", "desc")
+);
 
-if(snapshot.empty){
+onSnapshot(
+q,
+(snapshot) => {
 
-container.innerHTML=`
+container.innerHTML = "";
+
+if (snapshot.empty) {
+
+container.innerHTML = `
 <div class="empty">
 <i class="fa-solid fa-bullhorn"></i>
 <p>No notices yet</p>
 </div>
 `;
+
 return;
 
 }
 
-let pinned=[];
-let normal=[];
+let pinned = [];
+let normal = [];
 
-snapshot.forEach(docSnap=>{
-const data=docSnap.data();
+snapshot.forEach(docSnap => {
 
-const card=`
+const data = docSnap.data();
+
+const card = `
 
 <div class="notice-card">
 
@@ -213,30 +263,43 @@ ${data.message}
 </div>
 
 </div>
+
 `;
 
-if(data.pinned){
+if (data.pinned) {
+
 pinned.push(card);
-}else{
+
+} else {
+
 normal.push(card);
+
 }
 
 });
 
-container.innerHTML = pinned.join("") + normal.join("");
+container.innerHTML =
+pinned.join("") +
+normal.join("");
 
-});
+}
+);
 
 }
 
 
 
 /* =========================================
-AUTO LOAD
+AUTO LOAD (AUTH SAFE)
 ========================================= */
 
-document.addEventListener("DOMContentLoaded",()=>{
+onAuthStateChanged(
+auth,
+(user) => {
+
+if (!user) return;
 
 loadNotices();
 
-});
+}
+);
