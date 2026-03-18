@@ -47,7 +47,7 @@ Math.random().toString(36).slice(2);
 
 
 /* ===========================
-CACHE USER (instant UI)
+CACHE USER
 =========================== */
 
 function saveUserCache(user, extra = {}) {
@@ -55,6 +55,7 @@ function saveUserCache(user, extra = {}) {
 const cache = {
 
 name:
+extra.name ||
 user.displayName ||
 user.email.split("@")[0],
 
@@ -80,7 +81,7 @@ JSON.stringify(cache)
 
 
 /* ===========================
-ENSURE USER DOC
+ENSURE USER DOC (SAFE)
 =========================== */
 
 async function ensureUserDoc(user) {
@@ -117,6 +118,12 @@ createdAt: serverTimestamp()
 
 } else {
 
+const data = snap.data();
+
+/* DO NOT recreate session every refresh */
+
+if (!data.sessionId) {
+
 await setDoc(
 ref,
 {
@@ -124,6 +131,10 @@ sessionId: createSessionId()
 },
 { merge: true }
 );
+
+}
+
+saveUserCache(user, data);
 
 }
 
@@ -142,8 +153,6 @@ if (!user) return;
 try {
 
 await ensureUserDoc(user);
-
-saveUserCache(user);
 
 const pass =
 sessionStorage.getItem("loginPass");
@@ -186,8 +195,6 @@ provider
 
 await ensureUserDoc(cred.user);
 
-saveUserCache(cred.user);
-
 location.replace("../dashboard.html");
 
 } catch (e) {
@@ -226,8 +233,6 @@ doc(db, "users", cred.user.uid),
 { password },
 { merge: true }
 );
-
-saveUserCache(cred.user);
 
 location.replace("../dashboard.html");
 
@@ -292,14 +297,15 @@ cred
 
 await updatePassword(
 user,
-newPass);
+newPass
+);
 
 }
 
 
 
 /* ===========================
-PROTECT PAGE (stable)
+PROTECT PAGE (FINAL FIX)
 =========================== */
 
 export function protectPage() {
@@ -322,6 +328,8 @@ location.replace("../login.html");
 });
 
 
+/* allow firebase restore */
+
 setTimeout(() => {
 
 if (!checked) {
@@ -334,11 +342,11 @@ location.replace("../login.html");
 
 }
 
-}, 4000);
+}, 5000);
 
 }
 
-}, 1500);
+}, 2500);
 
 }
 

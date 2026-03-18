@@ -63,7 +63,7 @@ console.log("cache error", e);
 
 
 /* =========================
-3. AUTH LISTENER (background)
+3. AUTH LISTENER (SAFE)
 ========================= */
 
 onAuthStateChanged(auth, async (user) => {
@@ -72,13 +72,15 @@ authReady = true;
 
 if (!user) {
 
+/* wait for firebase restore */
+
 setTimeout(() => {
 
 if (!auth.currentUser) {
 location.replace("../login.html");
 }
 
-}, 1200);
+}, 2500);
 
 return;
 
@@ -112,7 +114,7 @@ data = snap.data();
 
 
 /* =========================
-SESSION CHECK
+SESSION CHECK (SAFE)
 ========================= */
 
 try {
@@ -120,14 +122,40 @@ try {
 const savedSession =
 localStorage.getItem("sessionId");
 
+/* save session if not saved */
+
+if (data.sessionId && !savedSession) {
+
+localStorage.setItem(
+"sessionId",
+data.sessionId
+);
+
+}
+
+/* check mismatch */
+
 if (
 data.sessionId &&
 savedSession &&
 data.sessionId !== savedSession
 ) {
 
-await signOut(auth);
+console.log("Session mismatch");
+
+/* delay logout to avoid false trigger */
+
+setTimeout(() => {
+
+if (auth.currentUser) {
+
+signOut(auth);
 location.replace("../login.html");
+
+}
+
+}, 1500);
+
 return;
 
 }
@@ -183,7 +211,9 @@ BUILD USER OBJECT
 const name =
 data.name ||
 user.displayName ||
-(user.email ? user.email.split("@")[0] : "User");
+(user.email
+? user.email.split("@")[0]
+: "User");
 
 
 const userObj = {
@@ -194,8 +224,11 @@ flat: data.flat || "-",
 phone: data.phone || "-",
 role: data.role || "resident",
 uid: data.uid,
-createdAt: Number(data.createdAt) || Date.now(),
-status: data.status || "active"
+createdAt:
+Number(data.createdAt) ||
+Date.now(),
+status:
+data.status || "active"
 
 };
 
@@ -218,7 +251,7 @@ JSON.stringify(userObj)
 
 
 /* =========================
-UPDATE UI AGAIN (sync)
+CALLBACK AGAIN (SYNC UI)
 ========================= */
 
 if (callback) {
@@ -228,7 +261,10 @@ callback(userObj);
 
 } catch (err) {
 
-console.log("loadUserData error", err);
+console.log(
+"loadUserData error",
+err
+);
 
 }
 
@@ -236,7 +272,7 @@ console.log("loadUserData error", err);
 
 
 /* =========================
-AUTH DEBUG (safe)
+AUTH DEBUG
 ========================= */
 
 setTimeout(() => {
@@ -245,6 +281,6 @@ if (!authReady) {
 console.log("Auth slow...");
 }
 
-}, 2000);
+}, 3000);
 
 }

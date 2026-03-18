@@ -602,96 +602,118 @@ import { logoutUser } from "./js/auth.js";
 
 window.logout = logoutUser;
 
-let userFlat = ""
-let userId = ""
+let userFlat = "";
+let userId = "";
+
+let authReady = false;
+let listenerStarted = false;
 
 
 /* =========================
-AUTH
+AUTH (SAFE VERSION)
 ========================= */
 
 onAuthStateChanged(auth, async (user)=>{
 
-if(!user){
-window.location.href="login.html"
-return
+authReady = true;
+
+if (!user) {
+
+/* wait for firebase restore */
+
+setTimeout(()=>{
+
+if (!auth.currentUser) {
+location.href = "login.html";
 }
 
-userId = user.uid
+}, 2500);
 
-try{
+return;
+}
+
+if (listenerStarted) return;
+listenerStarted = true;
+
+userId = user.uid;
+
+try {
 
 const snap =
 await getDoc(
 doc(db,"users",user.uid)
-)
+);
 
-if(!snap.exists()) return
+if (!snap.exists()) return;
 
-const data = snap.data()
+const data = snap.data();
 
 
-/* admin */
+/* admin menu */
 
 const adminMenu =
-document.getElementById("adminMenu")
+document.getElementById("adminMenu");
 
-if(
-data.role==="admin" &&
+if (
+data.role === "admin" &&
 adminMenu
-){
-adminMenu.style.display="flex"
+) {
+adminMenu.style.display = "flex";
 }
 
 
-userFlat = data.flat || ""
+/* save flat */
+
+userFlat = data.flat || "";
 
 
-/* UI */
+/* update UI safely */
 
-setText("userName", data.name || "User")
+setText("userName", data.name || "User");
 
 setText(
 "userFlat",
 data.flat ? "Flat " + data.flat : "-"
-)
+);
 
 setText(
 "drawerName",
 data.name || "User"
-)
+);
 
 setText(
 "menuAvatar",
 data.name
 ? data.name[0].toUpperCase()
 : "U"
-)
+);
 
 setText(
 "drawerFlat",
 data.flat
 ? "Flat " + data.flat
 : "-"
-)
+);
 
 setText(
 "headerAvatar",
 data.name
 ? data.name[0].toUpperCase()
 : "U"
-)
+);
 
-listenNotifications()
 
-}catch(e){
+/* start notifications AFTER flat ready */
 
-console.log("Auth load error", e)
+listenNotifications();
+
+} catch (e) {
+
+console.log("Dashboard load error", e);
 
 }
 
-})
-
+});
 
 
 /* =========================
@@ -701,65 +723,79 @@ SAFE TEXT
 function setText(id, value){
 
 const el =
-document.getElementById(id)
+document.getElementById(id);
 
-if(el) el.innerText = value
+if (el) el.innerText = value;
 
 }
 
 
-
 /* =========================
-NOTIFICATION BELL
+NOTIFICATION BELL (SAFE)
 ========================= */
 
 function listenNotifications(){
 
 const bell =
-document.getElementById("bellCount")
+document.getElementById("bellCount");
 
-if(!bell) return
+if (!bell) return;
+
+if (!userFlat) return;
 
 const q =
 query(
 collection(db,"notifications")
-)
+);
 
 onSnapshot(q,(snapshot)=>{
 
-let count = 0
+let count = 0;
 
 snapshot.forEach(docSnap=>{
 
-const n = docSnap.data()
+const n = docSnap.data();
 
-if(
+if (
 n.to !== "all" &&
 n.to !== userFlat
-) return
+) return;
 
 const read =
-n.readBy?.includes(userId)
+n.readBy?.includes(userId);
 
-if(!read) count++
+if (!read) count++;
 
-})
+});
 
 
-if(count > 0){
+if (count > 0) {
 
-bell.innerText = count
-bell.style.display = "block"
+bell.innerText = count;
+bell.style.display = "block";
 
-}else{
+} else {
 
-bell.style.display = "none"
+bell.style.display = "none";
+
+}
+
+});
 
 }
 
-})
 
+/* =========================
+AUTH DEBUG
+========================= */
+
+setTimeout(()=>{
+
+if (!authReady) {
+console.log("Auth slow...");
 }
+
+},3000);
 
 </script>
 
