@@ -6,19 +6,41 @@ import {
 doc,
 getDoc,
 updateDoc
-} from
+}
+from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
 onAuthStateChanged,
 signOut
-} from
+}
+from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 let listenerStarted = false;
 let memoryCache = null;
 
+
+
+/* =========================
+CHECK PWA MODE
+========================= */
+
+function isStandalone() {
+
+return (
+window.matchMedia("(display-mode: standalone)").matches ||
+window.navigator.standalone === true
+);
+
+}
+
+
+
+/* =========================
+LOAD USER DATA
+========================= */
 
 export function loadUserData(callback) {
 
@@ -28,8 +50,9 @@ listenerStarted = true;
 let authReady = false;
 
 
+
 /* =========================
-1. MEMORY CACHE (fastest)
+1. MEMORY CACHE (instant)
 ========================= */
 
 if (memoryCache && callback) {
@@ -37,8 +60,9 @@ callback(memoryCache);
 }
 
 
+
 /* =========================
-2. LOCAL CACHE (instant UI)
+2. LOCAL CACHE (fast UI)
 ========================= */
 
 try {
@@ -63,16 +87,29 @@ console.log("cache error", e);
 
 
 /* =========================
-3. AUTH LISTENER (SAFE)
+3. AUTH LISTENER
 ========================= */
 
 onAuthStateChanged(auth, async (user) => {
 
 authReady = true;
 
+const appMode = isStandalone();
+
+
+/* -------------------------
+NO USER
+------------------------- */
+
 if (!user) {
 
-/* wait for firebase restore */
+setTimeout(() => {
+
+if (!auth.currentUser) {
+
+if (appMode) {
+
+/* wait more in PWA */
 
 setTimeout(() => {
 
@@ -80,37 +117,41 @@ if (!auth.currentUser) {
 location.replace("../login.html");
 }
 
-}, 2500);
+}, 3000);
+
+} else {
+
+location.replace("../login.html");
+
+}
+
+}
+
+}, 1500);
 
 return;
 
 }
 
+
+/* -------------------------
+LOAD FIRESTORE
+------------------------- */
 
 try {
 
 const userRef =
 doc(db, "users", user.uid);
 
-let snap;
-
-try {
-
-snap = await getDoc(userRef);
-
-} catch (e) {
-
-console.log("getDoc error", e);
-return;
-
-}
-
+const snap =
+await getDoc(userRef);
 
 let data = {};
 
 if (snap.exists()) {
 data = snap.data();
 }
+
 
 
 /* =========================
@@ -122,7 +163,8 @@ try {
 const savedSession =
 localStorage.getItem("sessionId");
 
-/* save session if not saved */
+
+/* save if missing */
 
 if (data.sessionId && !savedSession) {
 
@@ -133,7 +175,8 @@ data.sessionId
 
 }
 
-/* check mismatch */
+
+/* mismatch */
 
 if (
 data.sessionId &&
@@ -143,7 +186,6 @@ data.sessionId !== savedSession
 
 console.log("Session mismatch");
 
-/* delay logout to avoid false trigger */
 
 setTimeout(() => {
 
@@ -154,15 +196,18 @@ location.replace("../login.html");
 
 }
 
-}, 1500);
+}, 2000);
 
 return;
 
 }
 
 } catch (e) {
-console.log("session check error", e);
+
+console.log("session error", e);
+
 }
+
 
 
 /* =========================
@@ -204,8 +249,9 @@ console.log("update error", e);
 }
 
 
+
 /* =========================
-BUILD USER OBJECT
+BUILD USER
 ========================= */
 
 const name =
@@ -233,6 +279,7 @@ data.status || "active"
 };
 
 
+
 /* =========================
 SAVE CACHE
 ========================= */
@@ -251,7 +298,7 @@ JSON.stringify(userObj)
 
 
 /* =========================
-CALLBACK AGAIN (SYNC UI)
+CALLBACK
 ========================= */
 
 if (callback) {
@@ -269,6 +316,7 @@ err
 }
 
 });
+
 
 
 /* =========================

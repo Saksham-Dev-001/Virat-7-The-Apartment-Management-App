@@ -34,6 +34,21 @@ const provider = new GoogleAuthProvider();
 
 
 /* ===========================
+CHECK IF APP MODE (PWA)
+=========================== */
+
+function isStandalone() {
+
+return (
+window.matchMedia("(display-mode: standalone)").matches ||
+window.navigator.standalone === true
+);
+
+}
+
+
+
+/* ===========================
 SESSION ID
 =========================== */
 
@@ -81,7 +96,7 @@ JSON.stringify(cache)
 
 
 /* ===========================
-ENSURE USER DOC (SAFE)
+ENSURE USER DOC
 =========================== */
 
 async function ensureUserDoc(user) {
@@ -120,15 +135,11 @@ createdAt: serverTimestamp()
 
 const data = snap.data();
 
-/* DO NOT recreate session every refresh */
-
 if (!data.sessionId) {
 
 await setDoc(
 ref,
-{
-sessionId: createSessionId()
-},
+{ sessionId: createSessionId() },
 { merge: true }
 );
 
@@ -292,8 +303,7 @@ oldPass
 
 await reauthenticateWithCredential(
 user,
-cred
-);
+cred);
 
 await updatePassword(
 user,
@@ -305,12 +315,14 @@ newPass
 
 
 /* ===========================
-PROTECT PAGE (FINAL FIX)
+PROTECT PAGE (FINAL STABLE)
 =========================== */
 
 export function protectPage() {
 
 let checked = false;
+
+const appMode = isStandalone();
 
 const unsub =
 onAuthStateChanged(auth, (user) => {
@@ -321,18 +333,9 @@ unsub();
 
 if (!user) {
 
-location.replace("../login.html");
+if (appMode) {
 
-}
-
-});
-
-
-/* allow firebase restore */
-
-setTimeout(() => {
-
-if (!checked) {
+/* wait longer in PWA */
 
 setTimeout(() => {
 
@@ -342,7 +345,30 @@ location.replace("../login.html");
 
 }
 
-}, 5000);
+}, 4000);
+
+} else {
+
+location.replace("../login.html");
+
+}
+
+}
+
+});
+
+
+/* slow restore fix */
+
+setTimeout(() => {
+
+if (!checked) {
+
+if (!appMode) {
+
+location.replace("../login.html");
+
+}
 
 }
 
