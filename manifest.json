@@ -2,7 +2,7 @@
   "name": "VIRAT-7",
   "short_name": "VIRAT7",
 
-  "start_url": "./index.html",
+  "start_url": "./dashboard.html",
   "scope": "./",
 
   "display": "standalone",
