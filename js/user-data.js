@@ -303,6 +303,7 @@ CALLBACK
 
 if (callback) {
 callback(userObj);
+hideLoader()
 }
 
 

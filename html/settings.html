@@ -234,8 +234,8 @@ color:#888;
 
 <div class="row">
 <div class="icon"><i class="fa-solid fa-user"></i></div>
-<div id="userName" class="title">User</div>
-<div id="userFlat" class="right">Flat</div>
+<div id="userName" class="title skeleton sk-title"></div>
+<div id="userFlat" class="right skeleton sk-text"></div>
 </div>
 
 <div class="row" onclick="changePassword()">
@@ -246,8 +246,7 @@ color:#888;
 <div class="row">
 <div class="icon"><i class="fa-solid fa-id-card"></i></div>
 <div class="title">User ID</div>
-<div id="uid" class="right">-</div>
-</div>
+<div id="uid" class="right skeleton sk-text"></div>
 
 </div>
 
@@ -273,7 +272,7 @@ color:#888;
 <div class="row">
 <div class="icon"><i class="fa-solid fa-clock"></i></div>
 <div class="title">Last Login</div>
-<div id="lastLogin" class="right">-</div>
+<div id="lastLogin" class="right skeleton sk-text"></div>
 </div>
 
 </div>
@@ -375,83 +374,231 @@ color:#888;
 let logoutUser;
 let loadUserData;
 
+
+/* =========================
+SAFE TEXT (for skeleton)
+========================= */
+
+function setText(id, value){
+
+const el =
+document.getElementById(id)
+
+if(!el) return
+
+el.classList.remove("skeleton")
+el.classList.remove("sk-text")
+el.classList.remove("sk-title")
+
+el.innerText = value
+
+}
+
+
+/* =========================
+INIT
+========================= */
+
 async function init(){
 
 try{
-const a = await import("../js/auth.js");
-logoutUser = a.logoutUser;
-}catch(e){}
+
+const a =
+await import("../js/auth.js")
+
+logoutUser =
+a.logoutUser
+
+}catch(e){
+console.log("auth load error", e)
+}
+
 
 try{
-const u = await import("../js/user-data.js");
-loadUserData = u.loadUserData;
-}catch(e){}
 
-document.body.style.opacity = 1;
+const u =
+await import("../js/user-data.js")
 
-const now = new Date();
+loadUserData =
+u.loadUserData
 
-lastLogin.innerText =
+}catch(e){
+console.log("user-data load error", e)
+}
+
+
+document.body.style.opacity = 1
+
+
+/* last login */
+
+const lastLoginEl =
+document.getElementById("lastLogin")
+
+if(lastLoginEl){
+
+const now = new Date()
+
+setText(
+"lastLogin",
 now.toLocaleDateString() +
 " " +
-now.toLocaleTimeString();
+now.toLocaleTimeString()
+)
+
+}
+
+
+/* load user */
 
 if(loadUserData){
 
 loadUserData(user=>{
 
-uid.innerText = user.uid;
-userName.innerText = user.name;
-userFlat.innerText =
-user.flat ? "Flat "+user.flat : "-";
+if(!user) return
 
-});
+setText(
+"uid",
+user.uid
+)
+
+setText(
+"userName",
+user.name
+)
+
+setText(
+"userFlat",
+user.flat
+? "Flat " + user.flat
+: "-"
+)
+
+})
 
 }
 
 }
 
-init();
+
+init()
+
+
+
+/* =========================
+BACK
+========================= */
 
 window.goBack = () =>
-location.href="../dashboard.html";
 
-window.toggle = id =>
-document.getElementById(id).classList.toggle("active");
+location.href = "../dashboard.html"
+
+
+
+/* =========================
+SWITCH
+========================= */
+
+window.toggle = id => {
+
+const el =
+document.getElementById(id)
+
+if(el)
+el.classList.toggle("active")
+
+}
+
+
+
+/* =========================
+POPUP SAFE
+========================= */
+
+const popup =
+document.getElementById("popup")
+
+const popupTitle =
+document.getElementById("popupTitle")
+
+const popupText =
+document.getElementById("popupText")
+
+const popupOk =
+document.getElementById("popupOk")
+
+
 
 function showPopup(t,m){
 
-popupTitle.innerHTML=t;
-popupText.innerHTML=m;
+if(!popup) return
 
-popupOk.onclick=closePopup;
+popupTitle.innerHTML = t
+popupText.innerHTML = m
 
-popup.classList.add("show");
+popupOk.onclick = closePopup
+
+popup.classList.add("show")
 
 }
 
-window.closePopup=()=>
-popup.classList.remove("show");
 
-window.changePassword=()=>
-showPopup("Password","Only admin can change password");
 
-window.contactAdmin=()=>
-showPopup("Admin","+91 XXXXX");
+window.closePopup = ()=>{
 
-window.reportProblem=()=>
-showPopup("Report","Coming soon");
+if(popup)
+popup.classList.remove("show")
 
-window.confirmLogout=()=>{
+}
 
-popupTitle.innerText="Logout";
-popupText.innerText="Logout from VIRAT-7?";
 
-popupOk.onclick=logoutUser;
 
-popup.classList.add("show");
+/* =========================
+ACTIONS
+========================= */
 
-};
+window.changePassword = ()=>{
+
+showPopup(
+"Password",
+"Only admin can change password"
+)
+
+}
+
+
+window.contactAdmin = ()=>{
+
+showPopup(
+"Admin",
+"+91 XXXXX"
+)
+
+}
+
+
+window.reportProblem = ()=>{
+
+showPopup(
+"Report",
+"Coming soon"
+)
+
+}
+
+
+window.confirmLogout = ()=>{
+
+if(!popup) return
+
+popupTitle.innerText = "Logout"
+popupText.innerText = "Logout from VIRAT-7?"
+
+popupOk.onclick = logoutUser
+
+popup.classList.add("show")
+
+}
 
 </script>
 

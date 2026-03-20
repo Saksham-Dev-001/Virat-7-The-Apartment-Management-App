@@ -82,3 +82,184 @@ color:var(--text);
 background:var(--menu);
 color:var(--text);
 }
+
+
+/* ===== Skeleton ===== */
+
+.skeleton {
+background: linear-gradient(
+90deg,
+#eee 25%,
+#f5f5f5 37%,
+#eee 63%
+);
+background-size: 400% 100%;
+animation: skeleton-loading 1.4s infinite;
+border-radius: 6px;
+}
+
+@keyframes skeleton-loading {
+
+0% {
+background-position: 100% 50%;
+}
+
+100% {
+background-position: 0 50%;
+}
+
+}
+
+
+/* sizes */
+
+.sk-text {
+height: 14px;
+width: 100px;
+margin: 4px 0;
+}
+
+.sk-title {
+height: 18px;
+width: 140px;
+margin: 6px 0;
+}
+
+.sk-avatar {
+width: 36px;
+height: 36px;
+border-radius: 50%;
+}
+
+.sk-card {
+height: 60px;
+border-radius: 12px;
+margin-bottom: 10px;
+}
+
+
+
+/* ===== GLOBAL LOADER ===== */
+
+.page-loader{
+position:fixed;
+inset:0;
+background:#ffffff;
+z-index:99999;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+transition:.3s;
+}
+
+.loader-box{
+text-align:center;
+}
+
+.loader-logo{
+font-size:22px;
+font-weight:700;
+color:#5a67d8;
+margin-bottom:14px;
+}
+
+.loader-bar{
+width:120px;
+height:6px;
+border-radius:6px;
+background:#eee;
+overflow:hidden;
+position:relative;
+}
+
+.loader-bar::after{
+content:"";
+position:absolute;
+left:-40%;
+width:40%;
+height:100%;
+background:#5a67d8;
+animation:loadbar 1s infinite;
+}
+
+@keyframes loadbar{
+
+0%{left:-40%}
+100%{left:100%}
+
+}
+
+
+
+/* =========================
+GLOBAL LOADING PAGE
+========================= */
+
+.loading-page{
+
+position:fixed;
+
+top:0;
+left:0;
+right:0;
+bottom:0;
+
+width:100%;
+height:100%;
+
+background:#f5f7fb;
+
+display:flex;
+flex-direction:column;
+
+align-items:center;
+justify-content:center;
+
+z-index:99999;
+
+}
+
+.loading-box{
+
+display:flex;
+flex-direction:column;
+
+align-items:center;
+justify-content:center;
+
+}
+
+.loader{
+
+width:42px;
+height:42px;
+
+border:4px solid #ddd;
+border-top:4px solid #5a67d8;
+
+border-radius:50%;
+
+animation:spin 1s linear infinite;
+
+margin:auto;
+
+}
+
+.loading-page p{
+
+margin-top:16px;
+font-size:15px;
+color:#555;
+
+text-align:center;
+
+}
+
+@keyframes spin{
+
+0%{transform:rotate(0)}
+100%{transform:rotate(360deg)}
+
+}

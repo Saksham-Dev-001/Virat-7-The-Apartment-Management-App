@@ -237,6 +237,18 @@ color:#bbb;
 
 <body>
 
+<div id="loadingPage" class="loading-page">
+
+<div class="loading-box">
+
+<div class="loader"></div>
+
+<p>Loading Admin Panel...</p>
+
+</div>
+
+</div>
+
 <header class="app-header">
 
 <button class="back-btn" onclick="history.back()">
@@ -259,7 +271,7 @@ color:#bbb;
 <div class="stat-chip">
 <i class="fa-solid fa-users"></i>
 <div>
-<b id="totalUsers">0</b>
+<b id="totalUsers" class="skeleton sk-text"></b>
 <span>Residents</span>
 </div>
 </div>
@@ -267,7 +279,7 @@ color:#bbb;
 <div class="stat-chip">
 <i class="fa-solid fa-file-invoice"></i>
 <div>
-<b id="totalBills">0</b>
+<b id="totalBills" class="skeleton sk-text"></b>
 <span>Bills</span>
 </div>
 </div>
@@ -275,7 +287,7 @@ color:#bbb;
 <div class="stat-chip">
 <i class="fa-solid fa-wallet"></i>
 <div>
-<b id="totalDues">₹0</b>
+<b id="totalDues" class="skeleton sk-text"></b>
 <span>Dues</span>
 </div>
 </div>
@@ -396,101 +408,237 @@ onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-/* ADMIN PROTECTION */
+/* =========================
+LOADING
+========================= */
 
-onAuthStateChanged(auth, async (user)=>{
+function hideLoading(){
 
-if(!user){
-window.location.href="../login.html";
-return;
+const el =
+document.getElementById("loadingPage")
+
+if(el)
+el.style.display="none"
+
 }
 
-const snap = await getDoc(doc(db,"users",user.uid));
+
+/* =========================
+SAFE TEXT
+========================= */
+
+function setText(id,value){
+
+const el =
+document.getElementById(id)
+
+if(!el) return
+
+el.classList.remove("skeleton")
+el.classList.remove("sk-text")
+
+el.innerText = value
+
+}
+
+
+
+/* =========================
+ADMIN CHECK
+========================= */
+
+onAuthStateChanged(
+auth,
+async (user)=>{
+
+if(!user){
+
+window.location.href="../login.html";
+return;
+
+}
+
+try{
+
+const snap =
+await getDoc(
+doc(db,"users",user.uid)
+);
 
 if(!snap.exists()){
+
 window.location.href="../dashboard.html";
 return;
+
 }
 
 const data = snap.data();
 
 if(data.role !== "admin"){
+
 alert("Access denied");
+
 window.location.href="../dashboard.html";
+return;
+
+}
+
+
+/* start admin after verify */
+
+startAdmin();
+
+}catch(e){
+
+console.log(
+"Admin check error",
+e
+);
+
+window.location.href="../dashboard.html";
+
 }
 
 });
 
 
-/* ANALYTICS */
 
-onSnapshot(collection(db,"users"),(snap)=>{
-document.getElementById("totalUsers").innerText=snap.size;
-});
+/* =========================
+START ADMIN
+========================= */
 
-
-onSnapshot(collection(db,"dues"),(snap)=>{
-
-let total=0;
-let bills=0;
-
-snap.forEach(doc=>{
-const d=doc.data();
-total+=Number(d.amount);
-bills++;
-});
-
-document.getElementById("totalDues").innerText="₹"+total;
-document.getElementById("totalBills").innerText=bills;
-
-});
+function startAdmin(){
 
 
-onSnapshot(collection(db,"payments"),(snap)=>{
+/* ---------- USERS ---------- */
 
-let total=0;
+onSnapshot(
+collection(db,"users"),
+(snap)=>{
 
-snap.forEach(doc=>{
-const p=doc.data();
-total+=Number(p.amount);
-});
-
-document.getElementById("totalPayments").innerText="₹"+total;
-
-});
-
-
-/* ACTIVITY LIST */
-
-const activityList=document.getElementById("activityList");
-
-const q=query(
-collection(db,"activities"),
-orderBy("time","desc"),
-limit(20)
+setText(
+"totalUsers",
+snap.size
 );
+
+}
+);
+
+
+
+/* ---------- DUES ---------- */
+
+onSnapshot(
+collection(db,"dues"),
+(snap)=>{
+
+let total = 0;
+let bills = 0;
+
+snap.forEach(doc=>{
+
+const d = doc.data();
+
+total += Number(d.amount || 0);
+bills++;
+
+});
+
+setText(
+"totalDues",
+"₹" + total
+);
+
+setText(
+"totalBills",
+bills
+);
+
+}
+);
+
+
+
+/* ---------- PAYMENTS ---------- */
+
+onSnapshot(
+collection(db,"payments"),
+(snap)=>{
+
+let total = 0;
+
+snap.forEach(doc=>{
+
+const p = doc.data();
+
+total += Number(
+p.amount || 0
+);
+
+});
+
+setText(
+"totalPayments",
+"₹" + total
+);
+
+
+/* hide loading after stats */
+
+hideLoading();
+
+}
+);
+
+
+
+/* ---------- ACTIVITY ---------- */
+
+const activityList =
+document.getElementById(
+"activityList"
+);
+
+if(!activityList) return;
+
+
+const q = query(
+
+collection(db,"activities"),
+
+orderBy("time","desc"),
+
+limit(20)
+
+);
+
 
 onSnapshot(q,(snap)=>{
 
-activityList.innerHTML="";
+activityList.innerHTML = "";
+
 
 if(snap.empty){
 
-activityList.innerHTML=`
+activityList.innerHTML = `
+
 <div class="empty-activity">
 <i class="fa-solid fa-clock"></i>
 <p>No activity yet</p>
 </div>
+
 `;
 
 return;
+
 }
+
 
 snap.forEach(doc=>{
 
-const a=doc.data();
+const a = doc.data();
 
-activityList.innerHTML+=`
+activityList.innerHTML += `
 
 <div class="activity-item">
 
@@ -500,10 +648,12 @@ activityList.innerHTML+=`
 
 <div class="activity-text">
 
-<h4>${a.title}</h4>
-<p>${a.message}</p>
+<h4>${a.title || ""}</h4>
+
+<p>${a.message || ""}</p>
+
 <span class="activity-time">
-${a.time?.toDate().toLocaleString() || ""}
+${a.time ? a.time.toDate().toLocaleString() : ""}
 </span>
 
 </div>
@@ -516,6 +666,7 @@ ${a.time?.toDate().toLocaleString() || ""}
 
 });
 
+}
 </script>
 
 </body>

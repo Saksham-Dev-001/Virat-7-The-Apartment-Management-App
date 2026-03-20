@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
@@ -23,6 +22,7 @@ padding:14px;
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:14px;
+min-height:100vh;
 }
 
 .card{
@@ -83,6 +83,48 @@ cursor:pointer;
 }
 
 
+/* ========= LOADING ========= */
+
+.loading-page{
+
+position:fixed;
+
+top:56px;
+left:0;
+right:0;
+bottom:0;
+
+background:#f5f7fb;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+z-index:999;
+
+}
+
+.loader{
+
+width:40px;
+height:40px;
+
+border:4px solid #ddd;
+border-top:4px solid #5a67d8;
+
+border-radius:50%;
+
+animation:spin 1s linear infinite;
+
+}
+
+@keyframes spin{
+
+0%{transform:rotate(0)}
+100%{transform:rotate(360deg)}
+
+}
+
 </style>
 
 </head>
@@ -103,6 +145,13 @@ cursor:pointer;
 </header>
 
 
+<!-- LOADING -->
+
+<div id="loadingPage" class="loading-page">
+<div class="loader"></div>
+</div>
+
+
 
 <div class="container">
 
@@ -113,9 +162,7 @@ cursor:pointer;
 
 <h3>Create New Due</h3>
 
-<select id="flat">
-<option value="">Select Flat</option>
-</select>
+<select id="flat"></select>
 
 <input id="amount" type="number" placeholder="Amount ₹">
 
@@ -187,9 +234,7 @@ Pending:
 
 <h3>Recent Dues</h3>
 
-<div id="recentDues">
-No dues
-</div>
+<div id="recentDues">Loading...</div>
 
 </div>
 
@@ -217,192 +262,188 @@ from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-/* ========= MONTHS ========= */
+const loadingPage =
+document.getElementById("loadingPage")
 
-const month = document.getElementById("month");
-const genMonth = document.getElementById("genMonth");
+let loadCount = 0
 
-const months = [
+function done(){
+
+loadCount++
+
+if(loadCount >= 2){
+loadingPage.style.display="none"
+}
+
+}
+
+
+
+/* MONTHS */
+
+const month =
+document.getElementById("month")
+
+const genMonth =
+document.getElementById("genMonth")
+
+const months=[
 "January","February","March","April","May","June",
 "July","August","September","October","November","December"
-];
+]
 
-const now = new Date();
-
-month.innerHTML="";
-genMonth.innerHTML="";
+const now=new Date()
 
 for(let i=0;i<12;i++){
 
-const m = (now.getMonth()+i)%12;
-const y = now.getFullYear() + Math.floor((now.getMonth()+i)/12);
+const m=(now.getMonth()+i)%12
+const y=now.getFullYear()+Math.floor((now.getMonth()+i)/12)
 
-const text = months[m] + " " + y;
+const text=months[m]+" "+y
 
-month.innerHTML += `<option value="${text}">${text}</option>`;
-genMonth.innerHTML += `<option value="${text}">${text}</option>`;
+month.innerHTML+=`<option>${text}</option>`
+genMonth.innerHTML+=`<option>${text}</option>`
 
 }
 
 
-/* ========= LOAD FLATS ========= */
 
-const flatSelect = document.getElementById("flat");
+/* LOAD FLATS */
+
+const flatSelect =
+document.getElementById("flat")
 
 async function loadFlats(){
 
-flatSelect.innerHTML =
-`<option value="">Select Flat</option>`;
+flatSelect.innerHTML=""
 
-const snap = await getDocs(
+const snap =
+await getDocs(
 collection(db,"users")
-);
+)
 
-const used = new Set();
+const used=new Set()
 
-snap.forEach(docSnap=>{
+snap.forEach(d=>{
 
-const u = docSnap.data();
+const f=d.data().flat
 
-const flat =
-u.flat ||
-u.flatNo ||
-u.flat_number ||
-u.room ||
-u.flatno ||
-"";
+if(!f) return
 
-if(!flat) return;
+if(used.has(f)) return
 
-if(used.has(flat)) return;
+used.add(f)
 
-used.add(flat);
+flatSelect.innerHTML+=
+`<option>${f}</option>`
 
-flatSelect.innerHTML +=
-`<option value="${flat}">
-${flat}
-</option>`;
+})
 
-});
+done()
 
 }
 
-loadFlats();
+loadFlats()
 
 
 
-/* ========= CREATE ========= */
+/* CREATE */
 
-window.createDue = async function(){
+window.createDue=async()=>{
 
-const flat = flatSelect.value;
-const amount = document.getElementById("amount").value;
-
-if(flat === ""){
-alert("Select Flat");
-return;
-}
-
-if(amount === ""){
-alert("Enter Amount");
-return;
-}
+const flat=flatSelect.value
+const amount=document.getElementById("amount").value
 
 await addDoc(
 collection(db,"dues"),
 {
-flat: flat,
-amount: Number(amount),
-type: document.getElementById("type").value,
-month: month.value,
+flat,
+amount:Number(amount),
+type:document.getElementById("type").value,
+month:month.value,
 status:"pending",
 createdAt:new Date()
 }
-);
+)
 
-alert("Due created");
-
-};
-
-
-
-/* ========= GENERATE ========= */
-
-window.generateAll=async function(){
-
-const amount=document.getElementById("genAmount").value;
-
-if(!amount){
-alert("Enter amount");
-return;
 }
 
-const snap=await getDocs(collection(db,"users"));
+
+
+/* GENERATE */
+
+window.generateAll=async()=>{
+
+const amount=
+document.getElementById("genAmount").value
+
+const snap=
+await getDocs(collection(db,"users"))
 
 for(const d of snap.docs){
 
-const f=d.data().flat;
+const f=d.data().flat
 
-if(!f) continue;
+if(!f) continue
 
-await addDoc(collection(db,"dues"),{
-
+await addDoc(
+collection(db,"dues"),
+{
 flat:f,
 amount:Number(amount),
 type:document.getElementById("genType").value,
 month:genMonth.value,
 status:"pending",
 createdAt:new Date()
-
-});
+}
+)
 
 }
 
-alert("Generated");
-
-};
+}
 
 
 
-/* ========= LOAD ========= */
+/* LOAD DUES */
 
-const container=document.getElementById("recentDues");
+const container=
+document.getElementById("recentDues")
 
 onSnapshot(
+
 query(
 collection(db,"dues"),
 orderBy("createdAt","desc")
 ),
+
 snap=>{
 
-container.innerHTML="";
+container.innerHTML=""
 
-let total=0;
-let paid=0;
-let pending=0;
-let bills=0;
+let total=0
+let paid=0
+let pending=0
+let bills=0
 
 snap.forEach(docSnap=>{
 
-const d=docSnap.data();
+const d=docSnap.data()
 
-bills++;
-total+=Number(d.amount);
+bills++
+total+=Number(d.amount)
 
 if(d.status==="paid")
-paid+=Number(d.amount);
+paid+=Number(d.amount)
 else
-pending+=Number(d.amount);
+pending+=Number(d.amount)
 
 container.innerHTML+=`
 
 <div class="recent-due">
 
 <div>
-
 <b>${d.flat}</b><br>
 ${d.month} • ₹${d.amount}
-
 </div>
 
 <div>
@@ -421,45 +462,41 @@ Delete
 
 </div>
 
-`;
+`
 
-});
+})
 
-totalBills.innerText=bills;
-totalAmount.innerText="₹"+total;
-paidAmount.innerText="₹"+paid;
-pendingAmount.innerText="₹"+pending;
+totalBills.innerText=bills
+totalAmount.innerText="₹"+total
+paidAmount.innerText="₹"+paid
+pendingAmount.innerText="₹"+pending
 
-});
+done()
+
+})
 
 
-
-/* ========= DELETE ========= */
 
 window.deleteDue=async id=>{
 
-if(!confirm("Delete?")) return;
+await deleteDoc(
+doc(db,"dues",id)
+)
 
-await deleteDoc(doc(db,"dues",id));
-
-};
-
-
-
-/* ========= EDIT ========= */
+}
 
 window.editDue=async(id,a)=>{
 
-const v=prompt("Edit amount",a);
+const v=prompt("Edit",a)
 
-if(!v) return;
+if(!v) return
 
 await updateDoc(
 doc(db,"dues",id),
 {amount:Number(v)}
-);
+)
 
-};
+}
 
 </script>
 

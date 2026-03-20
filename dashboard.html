@@ -18,6 +18,7 @@ rel="stylesheet"/>
 
 <link rel="stylesheet" href="../css/logout.css">
 <link rel="stylesheet" href="../css/footer.css">
+<link rel="stylesheet" href="../css/base.css">
 
 <style>
 
@@ -381,6 +382,13 @@ transform:scale(.95);
 </style>
 </head>
 
+<div id="pageLoader" class="page-loader">
+<div class="loader-box">
+<div class="loader-logo">VIRAT 7</div>
+<div class="loader-bar"></div>
+</div>
+</div>
+
 <body>
 
 <div id="menuOverlay" class="menu-overlay"></div>
@@ -478,7 +486,9 @@ VIRAT <span>7</span>
 <span id="bellCount" class="bell-count"></span>
 </div>
 
-<div class="avatar" onclick="location.href='html/profile.html'" id="headerAvatar">U</div>
+<div class="avatar skeleton sk-avatar"
+onclick="location.href='html/profile.html'"
+id="headerAvatar"></div>
 
 <div class="menu-btn" onclick="toggleMenu()">
 <i class="fa-solid fa-bars"></i>
@@ -491,8 +501,8 @@ VIRAT <span>7</span>
 <main>
 
 <div class="user-info">
-<h3 id="userName">User</h3>
-<small id="userFlat">Flat -</small>
+<h3 id="userName" class="skeleton sk-title"> </h3>
+<small id="userFlat" class="skeleton sk-text"> </small>
 </div>
 
 <div class="cards">
@@ -706,6 +716,7 @@ data.name
 /* start notifications AFTER flat ready */
 
 listenNotifications();
+hideLoader()
 
 } catch (e) {
 
@@ -722,10 +733,16 @@ SAFE TEXT
 
 function setText(id, value){
 
-const el =
-document.getElementById(id);
+const el = document.getElementById(id)
 
-if (el) el.innerText = value;
+if(!el) return
+
+el.classList.remove("skeleton")
+el.classList.remove("sk-title")
+el.classList.remove("sk-text")
+el.classList.remove("sk-avatar")
+
+el.innerText = value
 
 }
 
@@ -796,6 +813,22 @@ console.log("Auth slow...");
 }
 
 },3000);
+
+
+function hideLoader(){
+
+const l =
+document.getElementById("pageLoader")
+
+if(l){
+l.style.opacity="0"
+
+setTimeout(()=>{
+l.remove()
+},300)
+}
+
+}
 
 </script>
 
