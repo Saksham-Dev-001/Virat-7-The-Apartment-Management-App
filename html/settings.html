@@ -374,6 +374,8 @@ color:#888;
 let logoutUser;
 let loadUserData;
 
+let pageStarted = false;
+
 
 /* =========================
 SAFE TEXT (for skeleton)
@@ -427,6 +429,25 @@ console.log("user-data load error", e)
 }
 
 
+/* wait for firebase restore */
+
+setTimeout(startPage, 900)
+
+}
+
+init()
+
+
+
+/* =========================
+START PAGE (SAFE)
+========================= */
+
+function startPage(){
+
+if(pageStarted) return
+pageStarted = true
+
 document.body.style.opacity = 1
 
 
@@ -457,15 +478,9 @@ loadUserData(user=>{
 
 if(!user) return
 
-setText(
-"uid",
-user.uid
-)
+setText("uid", user.uid)
 
-setText(
-"userName",
-user.name
-)
+setText("userName", user.name)
 
 setText(
 "userFlat",
@@ -479,9 +494,6 @@ user.flat
 }
 
 }
-
-
-init()
 
 
 
@@ -587,6 +599,11 @@ showPopup(
 }
 
 
+
+/* =========================
+LOGOUT SAFE
+========================= */
+
 window.confirmLogout = ()=>{
 
 if(!popup) return
@@ -594,7 +611,13 @@ if(!popup) return
 popupTitle.innerText = "Logout"
 popupText.innerText = "Logout from VIRAT-7?"
 
-popupOk.onclick = logoutUser
+popupOk.onclick = async ()=>{
+
+if(!logoutUser) return
+
+await logoutUser()
+
+}
 
 popup.classList.add("show")
 

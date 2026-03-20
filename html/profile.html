@@ -387,68 +387,203 @@ Logout
 import { loadUserData } from "../js/user-data.js";
 import { logoutUser } from "../js/auth.js";
 
-const logoutBtn = document.getElementById("logoutBtn");
-const popup = document.getElementById("logoutPopup");
+
+const logoutBtn =
+document.getElementById("logoutBtn")
+
+const popup =
+document.getElementById("logoutPopup")
+
+const backBtn =
+document.getElementById("backBtn")
+
+
+let phone = ""
+let email = ""
+
+let pageStarted = false
+
+
+
+/* =========================
+BACK
+========================= */
+
+if(backBtn){
+
+backBtn.onclick = () => {
+
+window.location.href =
+"../dashboard.html"
+
+}
+
+}
+
+
+
+/* =========================
+LOGOUT BUTTON
+========================= */
+
+if(logoutBtn){
 
 logoutBtn.onclick = () => {
-  popup.classList.add("show");
-};
 
-document.getElementById("backBtn").onclick = () => {
-  window.location.href = "../dashboard.html";
-};
+popup.classList.add("show")
 
-let phone = "";
-let email = "";
+}
+
+}
 
 
-/* LOAD USER */
 
-loadUserData((user) => {
+/* =========================
+START SAFE
+========================= */
 
-  document.getElementById("userName").innerText = user.name;
-  document.getElementById("pEmail").innerText = user.email;
-  document.getElementById("pFlat").innerText = user.flat || "-";
-  document.getElementById("pPhone").innerText = user.phone || "-";
-
-  document.getElementById("pRole").innerText = user.role;
-  document.getElementById("pRole2").innerText = user.role;
-
-  document.getElementById("pUid").innerText = user.uid || "-";
-
-  document.getElementById("avatar").innerText =
-    user.name[0].toUpperCase();
-
-  phone = user.phone;
-  email = user.email;
-
-});
+setTimeout(startPage, 900)
 
 
-/* COPY */
 
-document.getElementById("copyEmail").onclick = () => {
-  navigator.clipboard.writeText(email);
-  alert("Email copied");
-};
+function startPage(){
 
-
-/* CALL */
-
-document.getElementById("callPhone").onclick = () => {
-  if (phone) location.href = "tel:" + phone;
-};
+if(pageStarted) return
+pageStarted = true
 
 
-/* POPUP */
+loadUserData((user)=>{
+
+if(!user) return
+
+
+setText("userName", user.name)
+
+setText("pEmail", user.email)
+
+setText(
+"pFlat",
+user.flat || "-"
+)
+
+setText(
+"pPhone",
+user.phone || "-"
+)
+
+setText(
+"pRole",
+user.role
+)
+
+setText(
+"pRole2",
+user.role
+)
+
+setText(
+"pUid",
+user.uid || "-"
+)
+
+
+const avatar =
+document.getElementById("avatar")
+
+if(avatar){
+
+avatar.innerText =
+user.name
+? user.name[0].toUpperCase()
+: "U"
+
+}
+
+
+phone = user.phone
+email = user.email
+
+})
+
+}
+
+
+
+/* =========================
+SAFE TEXT
+========================= */
+
+function setText(id, value){
+
+const el =
+document.getElementById(id)
+
+if(!el) return
+
+el.innerText = value
+
+}
+
+
+
+/* =========================
+COPY EMAIL
+========================= */
+
+const copyBtn =
+document.getElementById("copyEmail")
+
+if(copyBtn){
+
+copyBtn.onclick = () => {
+
+navigator.clipboard
+.writeText(email)
+
+alert("Email copied")
+
+}
+
+}
+
+
+
+/* =========================
+CALL
+========================= */
+
+const callBtn =
+document.getElementById("callPhone")
+
+if(callBtn){
+
+callBtn.onclick = () => {
+
+if(phone)
+location.href = "tel:" + phone
+
+}
+
+}
+
+
+
+/* =========================
+POPUP
+========================= */
 
 window.closePopup = () => {
-  popup.classList.remove("show");
-};
 
-window.confirmLogout = () => {
-  logoutUser();
-};
+popup.classList.remove("show")
+
+}
+
+
+window.confirmLogout = async () => {
+
+await logoutUser()
+
+}
 
 </script>
 
