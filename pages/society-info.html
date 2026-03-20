@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Society Info | VIRAT-7</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/header.css">
+
+<style>
+
+body{
+background:linear-gradient(
+180deg,
+#eef2f8,
+#e4e9f5
+);
+font-family:Poppins,sans-serif;
+animation:fadePage .4s ease;
+}
+
+@keyframes fadePage{
+from{opacity:0;transform:translateY(8px)}
+to{opacity:1}
+}
+
+
+/* ===== HERO ===== */
+
+.hero{
+background:linear-gradient(
+135deg,
+#5a67d8,
+#4c51bf,
+#7f9cf5
+);
+color:white;
+padding:26px 18px;
+border-radius:0 0 32px 32px;
+text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+.society-logo{
+width:82px;
+height:82px;
+border-radius:18px;
+margin:auto;
+display:block;
+margin-bottom:10px;
+object-fit:cover;
+box-shadow:0 6px 14px rgba(0,0,0,.4);
+}
+
+
+/* ===== MAIN ===== */
+
+main{
+padding:14px;
+max-width:760px;
+margin:auto;
+}
+
+
+/* ===== SECTION ===== */
+
+.section{
+margin-top:16px;
+}
+
+.section-title{
+font-weight:600;
+margin-bottom:8px;
+display:flex;
+align-items:center;
+gap:6px;
+font-size:15px;
+color:#444;
+}
+
+
+/* ===== CARD ===== */
+
+.card{
+background:white;
+border-radius:18px;
+padding:16px;
+box-shadow:0 6px 18px rgba(0,0,0,.08);
+margin-bottom:14px;
+transition:.2s;
+animation:cardIn .35s ease;
+}
+
+.card:hover{
+transform:translateY(-2px);
+box-shadow:0 12px 26px rgba(0,0,0,.12);
+}
+
+@keyframes cardIn{
+from{opacity:0;transform:translateY(6px);}
+to{opacity:1;}
+}
+
+
+/* ===== STATS ===== */
+
+.stats{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+}
+
+.stat{
+background:linear-gradient(
+135deg,
+#f4f6ff,
+#e9ecff
+);
+padding:14px;
+border-radius:14px;
+text-align:center;
+box-shadow:0 4px 10px rgba(0,0,0,.05);
+}
+
+.stat b{
+font-size:20px;
+display:block;
+color:#4c51bf;
+}
+
+.stat span{
+font-size:12px;
+color:#666;
+}
+
+
+/* ===== FAC ===== */
+
+.fac-grid{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:12px;
+}
+
+.fac{
+background:linear-gradient(
+135deg,
+#eef2ff,
+#e4e8ff
+);
+border-radius:14px;
+padding:12px;
+text-align:center;
+font-size:12px;
+cursor:pointer;
+transition:.2s;
+}
+
+.fac:hover{
+transform:scale(1.05);
+box-shadow:0 6px 12px rgba(0,0,0,.15);
+}
+
+.fac i{
+font-size:18px;
+display:block;
+margin-bottom:6px;
+color:#5a67d8;
+}
+
+
+/* ===== RULE ===== */
+
+.rule{
+background:linear-gradient(
+135deg,
+#f7f8ff,
+#eef1ff
+);
+padding:10px;
+border-radius:12px;
+margin-bottom:8px;
+font-size:13px;
+}
+
+
+/* ===== MAP ===== */
+
+.map-frame{
+width:100%;
+height:220px;
+border:none;
+border-radius:14px;
+box-shadow:0 4px 12px rgba(0,0,0,.1);
+}
+
+.share-btn{
+margin-top:10px;
+width:100%;
+padding:12px;
+border:none;
+border-radius:12px;
+background:linear-gradient(
+135deg,
+#5a67d8,
+#4c51bf
+);
+color:white;
+font-weight:600;
+cursor:pointer;
+transition:.2s;
+}
+
+.share-btn:hover{
+transform:scale(1.03);
+}
+
+
+/* ===== FLOOR ===== */
+
+.floor{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:10px;
+}
+
+.flat{
+background:linear-gradient(
+135deg,
+#f4f6ff,
+#e9ecff
+);
+padding:12px;
+border-radius:12px;
+text-align:center;
+font-size:13px;
+cursor:pointer;
+transition:.2s;
+font-weight:600;
+}
+
+.flat:hover{
+transform:scale(1.05);
+background:#5a67d8;
+color:white;
+}
+
+
+/* ===== OWN FLAT ===== */
+
+.my-flat{
+background:linear-gradient(
+135deg,
+#22c55e,
+#16a34a
+) !important;
+color:white !important;
+box-shadow:
+0 0 10px #22c55e,
+0 0 20px #22c55e;
+animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+0%{box-shadow:0 0 6px #22c55e}
+50%{box-shadow:0 0 18px #22c55e}
+100%{box-shadow:0 0 6px #22c55e}
+}
+
+
+/* ===== CONTACT ===== */
+
+.item{
+padding:8px 0;
+border-bottom:1px solid #eee;
+font-size:14px;
+}
+
+.item:last-child{
+border:none;
+}
+
+
+/* ===== POPUP BG ===== */
+
+.popup{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.55);
+backdrop-filter:blur(8px);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:9999;
+}
+
+.popup.show{
+display:flex;
+}
+
+
+/* ===== POPUP BOX ===== */
+
+.popup-box{
+
+background:linear-gradient(
+180deg,
+#ffffff,
+#f3f4ff
+);
+
+padding:26px 18px;
+
+border-radius:26px;
+
+width:92%;
+max-width:340px;
+
+text-align:center;
+
+box-shadow:
+0 25px 50px rgba(0,0,0,.25),
+0 0 0 1px rgba(255,255,255,.4);
+
+animation:popupIn .25s ease;
+
+}
+
+@keyframes popupIn{
+
+from{
+transform:scale(.85) translateY(10px);
+opacity:0;
+}
+
+to{
+transform:scale(1);
+opacity:1;
+}
+
+}
+
+
+/* ===== AVATAR ===== */
+
+.avatar{
+
+width:78px;
+height:78px;
+
+border-radius:50%;
+
+background:linear-gradient(
+135deg,
+#5a67d8,
+#7f9cf5
+);
+
+color:white;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+font-size:28px;
+font-weight:700;
+
+margin:auto;
+margin-bottom:12px;
+
+box-shadow:
+0 0 15px #7f9cf5,
+0 8px 18px rgba(0,0,0,.35);
+
+}
+
+
+/* ===== NAME ===== */
+
+#popName{
+
+font-size:20px;
+font-weight:700;
+margin-bottom:8px;
+
+}
+
+
+/* ===== INFO ROW ===== */
+
+.info-row{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:10px 12px;
+
+font-size:14px;
+
+background:linear-gradient(
+135deg,
+#f6f7ff,
+#eef0ff
+);
+
+border-radius:12px;
+
+margin-top:8px;
+
+box-shadow:
+inset 0 1px 0 rgba(255,255,255,.6),
+0 2px 6px rgba(0,0,0,.05);
+
+}
+
+
+.label{
+
+color:#555;
+font-weight:600;
+
+}
+
+
+/* ===== BADGE ===== */
+
+.badge{
+
+padding:4px 10px;
+
+border-radius:10px;
+
+font-size:12px;
+
+background:#eef2ff;
+
+color:#4c51bf;
+
+font-weight:700;
+
+}
+
+
+/* ===== ADMIN BADGE ===== */
+
+.badge.admin{
+
+background:linear-gradient(
+135deg,
+#fee2e2,
+#fecaca
+);
+
+color:#b91c1c;
+
+box-shadow:
+0 0 6px rgba(185,28,28,.4);
+
+}
+
+
+/* ===== CLOSE BUTTON ===== */
+
+.popup-box button{
+
+margin-top:14px;
+
+border:none;
+
+padding:10px 16px;
+
+border-radius:10px;
+
+background:linear-gradient(
+135deg,
+#5a67d8,
+#4c51bf
+);
+
+color:white;
+
+font-weight:600;
+
+cursor:pointer;
+
+transition:.2s;
+
+}
+
+.popup-box button:hover{
+
+transform:scale(1.05);
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="app-header">
+
+<button class="back-btn"
+onclick="history.back()">
+<i class="fa-solid fa-arrow-left"></i>
+</button>
+
+<h3 class="page-title">
+Society Info
+</h3>
+
+<div class="header-spacer"></div>
+
+</header>
+
+
+<div class="hero">
+
+<img src="../assets/logo.png"
+class="society-logo">
+
+<h2>VIRAT-7 Apartment</h2>
+
+<p>Virat-7, Heerabari-A, Opposite Bank Of Baroda, Niwaru Road, Jaipur (Rajasthan)</p>
+
+</div>
+
+
+
+<main>
+
+<!-- BASIC -->
+
+<div class="section">
+
+<div class="section-title">
+<i class="fa-solid fa-building"></i>
+Basic Info
+</div>
+
+<div class="card">
+
+<div class="stats">
+
+<div class="stat">
+<b>3</b>
+<span>Floors</span>
+</div>
+
+<div class="stat">
+<b>11</b>
+<span>Flats</span>
+</div>
+
+<div class="stat">
+<b>1</b>
+<span>Block</span>
+</div>
+
+<div class="stat">
+<b>11</b>
+<span>Residents</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- FACILITIES -->
+
+<div class="section">
+
+<div class="section-title">
+<i class="fa-solid fa-star"></i>
+Facilities
+</div>
+
+<div class="card">
+
+<div class="fac-grid">
+
+<div class="fac" onclick="info('Water Tank with 3 motors')">
+<i class="fa-solid fa-water"></i>
+Water Tank
+</div>
+
+<div class="fac" onclick="info('Temple outside apartment')">
+<i class="fa-solid fa-gopuram"></i>
+Temple
+</div>
+
+<div class="fac" onclick="info('Parking available')">
+<i class="fa-solid fa-square-parking"></i>
+Parking
+</div>
+
+<div class="fac" onclick="info('Security')">
+<i class="fa-solid fa-shield"></i>
+Security
+</div>
+
+<div class="fac" onclick="info('Terrace Tank Supply')">
+<i class="fa-solid fa-faucet"></i>
+Water Supply
+</div>
+
+<div class="fac" onclick="info('Residential Building')">
+<i class="fa-solid fa-building"></i>
+Apartment
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- RULES -->
+
+<div class="section">
+
+<div class="section-title">
+<i class="fa-solid fa-list"></i>
+Rules
+</div>
+
+<div class="card">
+
+<div class="rule">No loud music after 10PM</div>
+<div class="rule">Keep water usage limited</div>
+<div class="rule">Parking in assigned slot</div>
+<div class="rule">Visitors entry required</div>
+
+</div>
+
+</div>
+
+
+
+<!-- MAP -->
+
+<div class="section">
+
+<div class="section-title">
+<i class="fa-solid fa-map"></i>
+Society Location Map
+</div>
+
+<div class="card">
+
+<iframe
+src="https://maps.google.com/maps?q=26.9567530,75.7447189&z=15&output=embed"
+class="map-frame">
+</iframe>
+
+<button
+class="share-btn"
+onclick="shareLocation()">
+
+<i class="fa-solid fa-share"></i>
+Share Location
+
+</button>
+
+</div>
+
+</div>
+
+
+
+<!-- FLOOR -->
+
+<div class="section">
+
+<div class="section-title">
+<i class="fa-solid fa-layer-group"></i>
+Floor Layout
+</div>
+
+<div class="card">
+
+<div id="floorContainer"
+class="floor"></div>
+
+</div>
+
+</div>
+
+
+
+<!-- CONTACT -->
+
+<div class="section">
+
+<div class="section-title">
+<i class="fa-solid fa-phone"></i>
+Emergency Contact
+</div>
+
+<div class="card">
+
+<div class="item">Admin — +91 XXXXX</div>
+<div class="item">Security — +91 XXXXX</div>
+<div class="item">Electrician — +91 XXXXX</div>
+
+</div>
+
+</div>
+
+
+</main>
+
+
+
+<!-- POPUP -->
+
+<div id="popup" class="popup">
+
+<div class="popup-box pro-popup">
+
+<div class="avatar" id="popAvatar">U</div>
+
+<h3 id="popName">User</h3>
+
+<div class="pop-info">
+
+<div class="info-row">
+<span class="label">Flat</span>
+<span id="popFlat"></span>
+</div>
+
+<div class="info-row">
+<span class="label">Phone</span>
+<span id="popPhone"></span>
+</div>
+
+<div class="info-row">
+<span class="label">Role</span>
+<span id="popRole" class="badge"></span>
+</div>
+
+</div>
+
+<button onclick="closePopup()">
+Close
+</button>
+
+</div>
+
+</div>
+
+
+
+<script type="module">
+
+import { db } from "../js/firebase.js";
+
+import {
+collection,
+getDocs
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+/* =========================
+POPUP ELEMENTS
+========================= */
+
+const popup =
+document.getElementById("popup")
+
+const popName =
+document.getElementById("popName")
+
+const popFlat =
+document.getElementById("popFlat")
+
+const popPhone =
+document.getElementById("popPhone")
+
+const popRole =
+document.getElementById("popRole")
+
+const popAvatar =
+document.getElementById("popAvatar")
+
+
+/* =========================
+SHOW USER POPUP
+========================= */
+
+function showPopupUser(user, flat){
+
+popName.innerText =
+user.name || "Resident"
+
+/* FIXED (no duplicate label) */
+popFlat.innerText = flat
+
+popPhone.innerText =
+user.phone || "-"
+
+popRole.innerText =
+user.role || "resident"
+
+
+/* badge color */
+
+popRole.classList.remove("admin")
+
+if(user.role === "admin"){
+popRole.classList.add("admin")
+}
+
+
+/* avatar */
+
+popAvatar.innerText =
+(user.name || "U")[0].toUpperCase()
+
+
+/* animation restart */
+
+popup.classList.remove("show")
+
+setTimeout(()=>{
+popup.classList.add("show")
+},10)
+
+}
+
+
+/* =========================
+EMPTY POPUP
+========================= */
+
+function showEmpty(flat){
+
+popName.innerText =
+"No Resident"
+
+popFlat.innerText = flat
+
+popPhone.innerText = "-"
+
+popRole.innerText = "-"
+
+popRole.classList.remove("admin")
+
+popAvatar.innerText = "?"
+
+popup.classList.remove("show")
+
+setTimeout(()=>{
+popup.classList.add("show")
+},10)
+
+}
+
+
+/* =========================
+CLOSE
+========================= */
+
+window.closePopup = function(){
+
+popup.classList.remove("show")
+
+}
+
+
+/* =========================
+FLOOR STRUCTURE
+========================= */
+
+const layout = [
+
+{floor:"Ground Floor", flats:["G-1","G-2","G-3"]},
+
+{floor:"1st Floor", flats:["F-1","F-2","F-3","F-4"]},
+
+{floor:"2nd Floor", flats:["S-1","S-2","S-3","S-4"]}
+
+]
+
+
+const container =
+document.getElementById("floorContainer")
+
+let myFlat = null
+
+
+/* get cached flat */
+
+try{
+
+const cache =
+JSON.parse(
+localStorage.getItem("userCache")
+)
+
+if(cache){
+myFlat = cache.flat
+}
+
+}catch(e){}
+
+
+/* render floors */
+
+layout.forEach(f=>{
+
+const title =
+document.createElement("div")
+
+title.style.gridColumn = "1/4"
+title.style.fontWeight = "600"
+title.style.marginTop = "6px"
+
+title.innerText = f.floor
+
+container.appendChild(title)
+
+
+f.flats.forEach(flat=>{
+
+const d =
+document.createElement("div")
+
+d.className = "flat"
+
+if(flat === myFlat){
+d.classList.add("my-flat")
+}
+
+d.innerText = flat
+
+d.onclick = () =>
+showResident(flat)
+
+container.appendChild(d)
+
+})
+
+})
+
+
+/* =========================
+LOAD RESIDENT
+========================= */
+
+async function showResident(flat){
+
+try{
+
+const snap =
+await getDocs(
+collection(db,"users")
+)
+
+let found = null
+
+snap.forEach(doc=>{
+
+const u = doc.data()
+
+if(u.flat === flat){
+found = u
+}
+
+})
+
+
+if(found){
+
+showPopupUser(found, flat)
+
+}else{
+
+showEmpty(flat)
+
+}
+
+}catch(e){
+
+showEmpty(flat)
+
+}
+
+}
+
+
+/* =========================
+SHARE LOCATION
+========================= */
+
+window.shareLocation = function(){
+
+const url =
+"https://maps.google.com/?q=26.9567530,75.7447189"
+
+if(navigator.share){
+
+navigator.share({
+
+title:"VIRAT-7",
+
+text:"Virat-7, Heerabari-A, Opposite Bank Of Baroda, Niwaru Road, Jaipur",
+
+url:url
+
+})
+
+}else{
+
+alert(url)
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
