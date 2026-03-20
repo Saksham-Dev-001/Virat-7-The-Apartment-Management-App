@@ -20,11 +20,12 @@ from
 
 let listenerStarted = false;
 let memoryCache = null;
+let authResolved = false;
 
 
 
 /* =========================
-CHECK PWA MODE
+PWA CHECK
 ========================= */
 
 function isStandalone() {
@@ -39,7 +40,7 @@ window.navigator.standalone === true
 
 
 /* =========================
-LOAD USER DATA
+LOAD USER
 ========================= */
 
 export function loadUserData(callback) {
@@ -47,12 +48,10 @@ export function loadUserData(callback) {
 if (listenerStarted) return;
 listenerStarted = true;
 
-let authReady = false;
-
 
 
 /* =========================
-1. MEMORY CACHE (instant)
+MEMORY CACHE
 ========================= */
 
 if (memoryCache && callback) {
@@ -62,7 +61,7 @@ callback(memoryCache);
 
 
 /* =========================
-2. LOCAL CACHE (fast UI)
+LOCAL CACHE
 ========================= */
 
 try {
@@ -80,28 +79,29 @@ if (callback) callback(data);
 
 }
 
-} catch (e) {
-console.log("cache error", e);
-}
+} catch (e) {}
 
 
 
 /* =========================
-3. AUTH LISTENER
+AUTH LISTENER
 ========================= */
 
 onAuthStateChanged(auth, async (user) => {
 
-authReady = true;
+authResolved = true;
 
 const appMode = isStandalone();
 
 
-/* -------------------------
+
+/* =========================
 NO USER
-------------------------- */
+========================= */
 
 if (!user) {
+
+console.log("No user yet, wait...");
 
 setTimeout(() => {
 
@@ -109,15 +109,15 @@ if (!auth.currentUser) {
 
 if (appMode) {
 
-/* wait more in PWA */
-
 setTimeout(() => {
 
 if (!auth.currentUser) {
+
 location.replace("../login.html");
+
 }
 
-}, 3000);
+}, 3500);
 
 } else {
 
@@ -127,24 +127,25 @@ location.replace("../login.html");
 
 }
 
-}, 1500);
+}, 2000);
 
 return;
 
 }
 
 
-/* -------------------------
+
+/* =========================
 LOAD FIRESTORE
-------------------------- */
+========================= */
 
 try {
 
-const userRef =
+const ref =
 doc(db, "users", user.uid);
 
 const snap =
-await getDoc(userRef);
+await getDoc(ref);
 
 let data = {};
 
@@ -155,18 +156,15 @@ data = snap.data();
 
 
 /* =========================
-SESSION CHECK (SAFE)
+SESSION CHECK SAFE
 ========================= */
 
 try {
 
-const savedSession =
+const saved =
 localStorage.getItem("sessionId");
 
-
-/* save if missing */
-
-if (data.sessionId && !savedSession) {
+if (data.sessionId && !saved) {
 
 localStorage.setItem(
 "sessionId",
@@ -175,17 +173,13 @@ data.sessionId
 
 }
 
-
-/* mismatch */
-
 if (
 data.sessionId &&
-savedSession &&
-data.sessionId !== savedSession
+saved &&
+saved !== data.sessionId
 ) {
 
 console.log("Session mismatch");
-
 
 setTimeout(() => {
 
@@ -202,11 +196,7 @@ return;
 
 }
 
-} catch (e) {
-
-console.log("session error", e);
-
-}
+} catch (e) {}
 
 
 
@@ -231,20 +221,13 @@ data.status = "active";
 updateNeeded = true;
 }
 
-
 if (updateNeeded) {
 
-try {
-
-await updateDoc(userRef, {
+await updateDoc(ref, {
 uid: data.uid,
 createdAt: data.createdAt,
 status: data.status
 });
-
-} catch (e) {
-console.log("update error", e);
-}
 
 }
 
@@ -270,11 +253,7 @@ flat: data.flat || "-",
 phone: data.phone || "-",
 role: data.role || "resident",
 uid: data.uid,
-createdAt:
-Number(data.createdAt) ||
-Date.now(),
-status:
-data.status || "active"
+status: data.status || "active"
 
 };
 
@@ -286,14 +265,10 @@ SAVE CACHE
 
 memoryCache = userObj;
 
-try {
-
 localStorage.setItem(
 "userCache",
 JSON.stringify(userObj)
 );
-
-} catch (e) {}
 
 
 
@@ -303,16 +278,20 @@ CALLBACK
 
 if (callback) {
 callback(userObj);
-hideLoader()
 }
 
 
-} catch (err) {
+/* =========================
+HIDE LOADER SAFE
+========================= */
 
-console.log(
-"loadUserData error",
-err
-);
+if (window.hideLoader) {
+hideLoader();
+}
+
+} catch (e) {
+
+console.log("loadUser error", e);
 
 }
 
@@ -326,8 +305,10 @@ AUTH DEBUG
 
 setTimeout(() => {
 
-if (!authReady) {
-console.log("Auth slow...");
+if (!authResolved) {
+
+console.log("Auth restore slow");
+
 }
 
 }, 3000);

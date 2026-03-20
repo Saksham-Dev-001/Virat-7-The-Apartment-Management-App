@@ -29,16 +29,12 @@ max-width:700px;
 margin:auto;
 }
 
-/* section */
-
 .section{
 font-size:12px;
 color:#6b7280;
 margin:16px 6px 6px;
 font-weight:600;
 }
-
-/* card */
 
 .card{
 background:#fff;
@@ -52,8 +48,6 @@ transition:.2s;
 .card:hover{
 box-shadow:0 12px 26px rgba(0,0,0,.12);
 }
-
-/* row */
 
 .row{
 display:flex;
@@ -76,8 +70,6 @@ background:#f7f9ff;
 transform:scale(.98);
 }
 
-/* icon */
-
 .icon{
 width:34px;
 height:34px;
@@ -90,8 +82,6 @@ justify-content:center;
 font-size:14px;
 }
 
-/* text */
-
 .title{
 flex:1;
 font-size:14px;
@@ -102,8 +92,6 @@ font-weight:500;
 font-size:12px;
 color:#888;
 }
-
-/* switch */
 
 .switch{
 width:46px;
@@ -135,8 +123,6 @@ background:#5a67d8;
 left:24px;
 }
 
-/* logout */
-
 .logout-btn{
 background:linear-gradient(
 135deg,
@@ -147,8 +133,6 @@ background:linear-gradient(
 color:white;
 font-weight:600;
 }
-
-/* popup */
 
 .popup{
 position:fixed;
@@ -173,12 +157,6 @@ width:90%;
 max-width:320px;
 text-align:center;
 box-shadow:0 20px 40px rgba(0,0,0,.25);
-animation:pop .18s ease;
-}
-
-@keyframes pop{
-from{transform:scale(.9);opacity:0}
-to{transform:scale(1);opacity:1}
 }
 
 .popup-actions{
@@ -223,6 +201,18 @@ color:#888;
 <div class="header-spacer"></div>
 
 </header>
+
+<div id="loadingPage" class="loading-page">
+
+<div class="loading-box">
+
+<div class="loader"></div>
+
+<p>Loading settings...</p>
+
+</div>
+
+</div>
 
 <main>
 
@@ -377,14 +367,11 @@ let loadUserData;
 let pageStarted = false;
 
 
-/* =========================
-SAFE TEXT (for skeleton)
-========================= */
+/* SAFE TEXT */
 
-function setText(id, value){
+function setText(id,value){
 
-const el =
-document.getElementById(id)
+const el=document.getElementById(id)
 
 if(!el) return
 
@@ -392,85 +379,70 @@ el.classList.remove("skeleton")
 el.classList.remove("sk-text")
 el.classList.remove("sk-title")
 
-el.innerText = value
+el.innerText=value
 
 }
 
 
-/* =========================
-INIT
-========================= */
+/* LOADING */
+
+function hideLoading(){
+
+const l=document.getElementById("loadingPage")
+
+if(l) l.style.display="none"
+
+document.body.style.opacity=1
+
+}
+
+
+/* INIT */
 
 async function init(){
 
 try{
 
-const a =
-await import("../js/auth.js")
+const a=await import("../js/auth.js")
+logoutUser=a.logoutUser
 
-logoutUser =
-a.logoutUser
-
-}catch(e){
-console.log("auth load error", e)
-}
-
+}catch(e){}
 
 try{
 
-const u =
-await import("../js/user-data.js")
+const u=await import("../js/user-data.js")
+loadUserData=u.loadUserData
 
-loadUserData =
-u.loadUserData
+}catch(e){}
 
-}catch(e){
-console.log("user-data load error", e)
-}
-
-
-/* wait for firebase restore */
-
-setTimeout(startPage, 900)
+setTimeout(startPage,400)
 
 }
 
 init()
 
 
-
-/* =========================
-START PAGE (SAFE)
-========================= */
+/* START */
 
 function startPage(){
 
 if(pageStarted) return
-pageStarted = true
-
-document.body.style.opacity = 1
+pageStarted=true
 
 
-/* last login */
-
-const lastLoginEl =
-document.getElementById("lastLogin")
+const lastLoginEl=document.getElementById("lastLogin")
 
 if(lastLoginEl){
 
-const now = new Date()
+const now=new Date()
 
 setText(
 "lastLogin",
-now.toLocaleDateString() +
-" " +
-now.toLocaleTimeString()
+now.toLocaleDateString()+" "+now.toLocaleTimeString()
 )
 
 }
 
-
-/* load user */
 
 if(loadUserData){
 
@@ -478,16 +450,15 @@ loadUserData(user=>{
 
 if(!user) return
 
-setText("uid", user.uid)
-
-setText("userName", user.name)
+setText("uid",user.uid)
+setText("userName",user.name)
 
 setText(
 "userFlat",
-user.flat
-? "Flat " + user.flat
-: "-"
+user.flat ? "Flat "+user.flat : "-"
 )
+
+hideLoading()
 
 })
 
@@ -496,125 +467,59 @@ user.flat
 }
 
 
+/* BACK */
 
-/* =========================
-BACK
-========================= */
-
-window.goBack = () =>
-
-location.href = "../dashboard.html"
+window.goBack=()=>location.href="../dashboard.html"
 
 
+/* SWITCH */
 
-/* =========================
-SWITCH
-========================= */
+window.toggle=id=>{
 
-window.toggle = id => {
+const el=document.getElementById(id)
 
-const el =
-document.getElementById(id)
-
-if(el)
-el.classList.toggle("active")
+if(el) el.classList.toggle("active")
 
 }
 
 
+/* POPUP */
 
-/* =========================
-POPUP SAFE
-========================= */
-
-const popup =
-document.getElementById("popup")
-
-const popupTitle =
-document.getElementById("popupTitle")
-
-const popupText =
-document.getElementById("popupText")
-
-const popupOk =
-document.getElementById("popupOk")
-
+const popup=document.getElementById("popup")
+const popupTitle=document.getElementById("popupTitle")
+const popupText=document.getElementById("popupText")
+const popupOk=document.getElementById("popupOk")
 
 
 function showPopup(t,m){
 
-if(!popup) return
+popupTitle.innerHTML=t
+popupText.innerHTML=m
 
-popupTitle.innerHTML = t
-popupText.innerHTML = m
-
-popupOk.onclick = closePopup
+popupOk.onclick=closePopup
 
 popup.classList.add("show")
 
 }
 
+window.closePopup=()=>popup.classList.remove("show")
 
 
-window.closePopup = ()=>{
+window.changePassword=()=>showPopup("Password","Only admin can change password")
 
-if(popup)
-popup.classList.remove("show")
+window.contactAdmin=()=>showPopup("Admin","+91 XXXXX")
 
-}
-
+window.reportProblem=()=>showPopup("Report","Coming soon")
 
 
-/* =========================
-ACTIONS
-========================= */
+window.confirmLogout=()=>{
 
-window.changePassword = ()=>{
+popupTitle.innerText="Logout"
+popupText.innerText="Logout from VIRAT-7?"
 
-showPopup(
-"Password",
-"Only admin can change password"
-)
-
-}
-
-
-window.contactAdmin = ()=>{
-
-showPopup(
-"Admin",
-"+91 XXXXX"
-)
-
-}
-
-
-window.reportProblem = ()=>{
-
-showPopup(
-"Report",
-"Coming soon"
-)
-
-}
-
-
-
-/* =========================
-LOGOUT SAFE
-========================= */
-
-window.confirmLogout = ()=>{
-
-if(!popup) return
-
-popupTitle.innerText = "Logout"
-popupText.innerText = "Logout from VIRAT-7?"
-
-popupOk.onclick = async ()=>{
+popupOk.onclick=async()=>{
 
 if(!logoutUser) return
-
 await logoutUser()
 
 }
