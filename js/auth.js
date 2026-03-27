@@ -32,7 +32,6 @@ PROVIDER
 const provider = new GoogleAuthProvider();
 
 
-
 /* ===========================
 CHECK IF APP MODE (PWA)
 =========================== */
@@ -47,7 +46,6 @@ window.navigator.standalone === true
 }
 
 
-
 /* ===========================
 SESSION ID
 =========================== */
@@ -58,7 +56,6 @@ return Date.now() + "_" +
 Math.random().toString(36).slice(2);
 
 }
-
 
 
 /* ===========================
@@ -72,7 +69,8 @@ const cache = {
 name:
 extra.name ||
 user.displayName ||
-user.email.split("@")[0],
+user.email?.split("@")[0] ||
+"User",
 
 email: user.email,
 
@@ -94,12 +92,13 @@ JSON.stringify(cache)
 }
 
 
-
 /* ===========================
 ENSURE USER DOC
 =========================== */
 
 async function ensureUserDoc(user) {
+
+try{
 
 const ref = doc(db, "users", user.uid);
 
@@ -111,7 +110,8 @@ await setDoc(ref, {
 
 name:
 user.displayName ||
-user.email.split("@")[0],
+user.email?.split("@")[0] ||
+"User",
 
 email: user.email,
 
@@ -131,9 +131,13 @@ createdAt: serverTimestamp()
 
 });
 
+saveUserCache(user);
+
 } else {
 
 const data = snap.data();
+
+/* ensure session id */
 
 if (!data.sessionId) {
 
@@ -149,8 +153,13 @@ saveUserCache(user, data);
 
 }
 
+}catch(e){
+
+console.log("ensureUserDoc error:", e);
+
 }
 
+}
 
 
 /* ===========================
@@ -164,6 +173,8 @@ if (!user) return;
 try {
 
 await ensureUserDoc(user);
+
+/* store password once */
 
 const pass =
 sessionStorage.getItem("loginPass");
@@ -189,7 +200,6 @@ console.log("Auth listener error:", e);
 });
 
 
-
 /* ===========================
 GOOGLE LOGIN
 =========================== */
@@ -206,6 +216,11 @@ provider
 
 await ensureUserDoc(cred.user);
 
+/* analytics */
+if(window.gtag){
+gtag('event','login',{method:'google'});
+}
+
 location.replace("../dashboard.html");
 
 } catch (e) {
@@ -216,7 +231,6 @@ alert(e.message);
 }
 
 }
-
 
 
 /* ===========================
@@ -239,11 +253,17 @@ password
 
 await ensureUserDoc(cred.user);
 
+/* store password (optional system) */
 await setDoc(
 doc(db, "users", cred.user.uid),
 { password },
 { merge: true }
 );
+
+/* analytics */
+if(window.gtag){
+gtag('event','login',{method:'email'});
+}
 
 location.replace("../dashboard.html");
 
@@ -257,7 +277,6 @@ alert(e.message);
 }
 
 
-
 /* ===========================
 LOGOUT
 =========================== */
@@ -267,6 +286,11 @@ export async function logoutUser() {
 try {
 
 localStorage.removeItem("userCache");
+
+/* analytics */
+if(window.gtag){
+gtag('event','logout');
+}
 
 await signOut(auth);
 
@@ -279,7 +303,6 @@ console.log(e);
 }
 
 }
-
 
 
 /* ===========================
@@ -295,6 +318,8 @@ const user = auth.currentUser;
 
 if (!user) return;
 
+try{
+
 const cred =
 EmailAuthProvider.credential(
 user.email,
@@ -303,19 +328,27 @@ oldPass
 
 await reauthenticateWithCredential(
 user,
-cred);
+cred
+);
 
 await updatePassword(
 user,
 newPass
 );
 
+alert("Password updated");
+
+}catch(e){
+
+alert("Password change failed");
+
+}
+
 }
 
 
-
 /* ===========================
-PROTECT PAGE (FINAL STABLE)
+PROTECT PAGE (STABLE)
 =========================== */
 
 export function protectPage() {
@@ -335,8 +368,6 @@ if (!user) {
 
 if (appMode) {
 
-/* wait longer in PWA */
-
 setTimeout(() => {
 
 if (!auth.currentUser) {
@@ -345,7 +376,7 @@ location.replace("../login.html");
 
 }
 
-}, 4000);
+}, 3500);
 
 } else {
 
@@ -358,24 +389,19 @@ location.replace("../login.html");
 });
 
 
-/* slow restore fix */
+/* fallback */
 
 setTimeout(() => {
 
-if (!checked) {
-
-if (!appMode) {
+if (!checked && !appMode) {
 
 location.replace("../login.html");
-
-}
 
 }
 
 }, 2500);
 
 }
-
 
 
 /* ===========================
